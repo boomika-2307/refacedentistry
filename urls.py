@@ -1,12 +1,17 @@
-from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
+from django.urls import path
+from . import views
+from django.urls import path
+from .views import dashboard_stats
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('core.urls')),
-    path('appointments/', include('appointments.urls')),
-    path('patients/', include('patients.urls')),
-    path('blog/', include('blog.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('', views.home, name='home'),
+    path("dashboard-stats/", dashboard_stats),
+    path('about/', views.about, name='about'),
+    path('services/', views.services, name='services'),
+    path('services/<slug:slug>/', views.service_detail, name='service_detail'),
+    path('gallery/', views.gallery, name='gallery'),
+    path('testimonials/', views.testimonials_view, name='testimonials'),
+    path('contact/', views.contact, name='contact'),
+    path('doctors/', views.doctors, name='doctors'),
+]
