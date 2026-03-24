@@ -1,0 +1,791 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us | Reface Dentofacial Centre of Excellence, Kilpauk Chennai{% endblock %}
+{% block meta_desc %}Learn about Reface Dentofacial Centre — our story, our internationally trained doctors, our state-of-the-art clinic in Kilpauk, Chennai, and our mission to transform smiles.{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.about-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #0b2a2a 60%, #1a3a2a 100%);
+    padding: 6rem 2rem 5rem;
+    position: relative; overflow: hidden;
+    text-align: center;
+}
+.about-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Ccircle cx='40' cy='40' r='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+.about-hero-inner { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }
+.about-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+    color: white; line-height: 1.07; margin-bottom: 1.25rem;
+}
+.about-hero h1 em { color: var(--accent); font-style: italic; }
+.about-hero p {
+    color: rgba(255,255,255,0.72); font-size: 1.1rem;
+    line-height: 1.75; max-width: 600px; margin: 0 auto 2.5rem;
+}
+.hero-pill-row {
+    display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;
+}
+.hero-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.85);
+    padding: 0.45rem 1rem; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 500;
+}
+.hero-pill i { color: var(--accent); font-size: 0.75rem; }
+
+/* ══════════════════════════════
+   STATS BAR
+══════════════════════════════ */
+.stats-bar {
+    background: var(--accent);
+    padding: 0;
+}
+.stats-bar-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.stat-block {
+    padding: 2rem 1.5rem; text-align: center;
+    border-right: 1px solid rgba(26,74,74,0.15);
+    transition: background 0.2s;
+}
+.stat-block:last-child { border-right: none; }
+.stat-block:hover { background: rgba(26,74,74,0.08); }
+.stat-block .num {
+    font-family: var(--font-display);
+    font-size: 2.75rem; font-weight: 600;
+    color: var(--primary); line-height: 1;
+}
+.stat-block .lbl {
+    font-size: 0.78rem; color: rgba(26,74,74,0.7);
+    margin-top: 0.3rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.07em;
+}
+
+/* ══════════════════════════════
+   STORY SECTION
+══════════════════════════════ */
+.story-section { padding: 6rem 2rem; background: white; }
+.story-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+}
+.story-content {}
+.story-content .section-subtitle { max-width: 100%; }
+.story-body {
+    color: var(--text-medium); line-height: 1.85;
+    font-size: 0.95rem; margin-top: 1.5rem;
+}
+.story-body p { margin-bottom: 1.1rem; }
+.story-signature {
+    margin-top: 2rem; display: flex; align-items: center; gap: 1rem;
+    padding-top: 1.5rem; border-top: 1px solid var(--border);
+}
+.story-sig-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-family: var(--font-display);
+    font-size: 1.25rem; flex-shrink: 0;
+}
+.story-sig-name { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
+.story-sig-role { font-size: 0.78rem; color: var(--text-light); }
+
+.story-visual { display: flex; flex-direction: column; gap: 1.25rem; }
+.story-highlight-card {
+    background: var(--off-white); border-radius: var(--radius-lg);
+    border: 1px solid var(--border); padding: 1.75rem;
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    transition: box-shadow 0.3s;
+}
+.story-highlight-card:hover { box-shadow: var(--shadow-sm); }
+.sh-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--primary); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+}
+.sh-title { font-weight: 700; color: var(--primary); font-size: 0.95rem; margin-bottom: 0.3rem; }
+.sh-desc { font-size: 0.83rem; color: var(--text-medium); line-height: 1.6; }
+
+/* ══════════════════════════════
+   360° VIRTUAL TOUR
+══════════════════════════════ */
+.tour-section { padding: 6rem 2rem; background: var(--primary); }
+.tour-inner { max-width: 1200px; margin: 0 auto; }
+.tour-header { text-align: center; margin-bottom: 3rem; }
+.tour-header .section-title { color: white; }
+.tour-header .section-label { color: var(--accent); justify-content: center; }
+.tour-header p { color: rgba(255,255,255,0.65); max-width: 560px; margin: 0 auto; font-size: 0.95rem; line-height: 1.7; }
+
+.tour-container {
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+    border: 3px solid rgba(201,168,76,0.3);
+    position: relative;
+}
+.tour-badge {
+    position: absolute; top: 1.25rem; left: 1.25rem; z-index: 10;
+    background: rgba(26,74,74,0.85); backdrop-filter: blur(8px);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--accent); padding: 0.5rem 1rem;
+    border-radius: 100px; font-size: 0.78rem; font-weight: 700;
+    display: flex; align-items: center; gap: 7px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    pointer-events: none;
+}
+.tour-badge i { animation: pulse360 2s infinite; }
+@keyframes pulse360 {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+}
+.tour-iframe-wrap {
+    width: 100%; line-height: 0;
+}
+.tour-iframe-wrap iframe {
+    display: block; width: 100%; border: none;
+}
+
+.tour-features {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 2.5rem;
+}
+.tour-feature {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+    text-align: center; transition: background 0.3s;
+}
+.tour-feature:hover { background: rgba(255,255,255,0.1); }
+.tour-feature i { font-size: 1.75rem; color: var(--accent); margin-bottom: 0.75rem; display: block; }
+.tour-feature h4 { color: white; font-size: 0.9rem; font-weight: 700; margin-bottom: 0.35rem; }
+.tour-feature p { color: rgba(255,255,255,0.55); font-size: 0.8rem; line-height: 1.5; }
+
+/* ══════════════════════════════
+   VALUES / MISSION
+══════════════════════════════ */
+.values-section { padding: 6rem 2rem; background: var(--off-white); }
+.values-inner { max-width: 1200px; margin: 0 auto; }
+.values-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 3rem;
+}
+.value-card {
+    background: white; border-radius: var(--radius-lg);
+    border: 1px solid var(--border); padding: 2.25rem;
+    text-align: center; transition: all 0.3s;
+    position: relative; overflow: hidden;
+}
+.value-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent); transform: scaleX(0);
+    transition: transform 0.3s; transform-origin: left;
+}
+.value-card:hover { box-shadow: var(--shadow-md); transform: translateY(-5px); }
+.value-card:hover::before { transform: scaleX(1); }
+.value-icon {
+    width: 64px; height: 64px; border-radius: 18px;
+    background: var(--off-white); margin: 0 auto 1.25rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; color: var(--primary);
+    transition: all 0.3s;
+}
+.value-card:hover .value-icon { background: var(--primary); color: var(--accent); }
+.value-card h3 {
+    font-family: var(--font-display); font-size: 1.2rem;
+    color: var(--primary); margin-bottom: 0.75rem;
+}
+.value-card p { font-size: 0.875rem; color: var(--text-medium); line-height: 1.7; }
+
+/* ══════════════════════════════
+   TIMELINE
+══════════════════════════════ */
+.timeline-section { padding: 6rem 2rem; background: white; }
+.timeline-inner { max-width: 900px; margin: 0 auto; }
+.timeline { position: relative; margin-top: 3.5rem; }
+.timeline::before {
+    content: ''; position: absolute;
+    left: 50%; transform: translateX(-50%);
+    top: 0; bottom: 0; width: 2px;
+    background: var(--border);
+}
+.timeline-item {
+    display: flex; align-items: flex-start;
+    gap: 2rem; margin-bottom: 3rem; position: relative;
+}
+.timeline-item:nth-child(odd) { flex-direction: row; }
+.timeline-item:nth-child(even) { flex-direction: row-reverse; }
+.timeline-content {
+    flex: 1; background: var(--off-white);
+    border-radius: var(--radius-lg); padding: 1.75rem;
+    border: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+}
+.timeline-content:hover { box-shadow: var(--shadow-sm); }
+.timeline-item:nth-child(odd) .timeline-content { text-align: right; }
+.timeline-year {
+    font-family: var(--font-display); font-size: 1.5rem;
+    color: var(--accent); font-weight: 600; margin-bottom: 0.25rem;
+}
+.timeline-content h4 { color: var(--primary); font-weight: 700; margin-bottom: 0.4rem; }
+.timeline-content p { font-size: 0.85rem; color: var(--text-medium); line-height: 1.65; }
+.timeline-dot {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--primary); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+    border: 4px solid white;
+    box-shadow: 0 0 0 2px var(--primary);
+    z-index: 1;
+}
+.timeline-spacer { flex: 1; }
+
+/* ══════════════════════════════
+   DOCTORS
+══════════════════════════════ */
+.doctors-section { padding: 6rem 2rem; background: var(--off-white); }
+.doctors-inner { max-width: 1200px; margin: 0 auto; }
+.doctors-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2rem; margin-top: 3rem;
+}
+.doctor-card {
+    background: white; border-radius: var(--radius-lg);
+    overflow: hidden; border: 1px solid var(--border);
+    transition: all 0.3s;
+}
+.doctor-card:hover { box-shadow: var(--shadow-md); transform: translateY(-6px); }
+.doctor-photo {
+    height: 280px; background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem; color: rgba(255,255,255,0.15); overflow: hidden;
+    position: relative;
+}
+.doctor-photo img { width: 100%; height: 100%; object-fit: cover; }
+.doctor-photo-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(26,74,74,0.9), transparent);
+    padding: 1.5rem 1.25rem 1rem;
+}
+.doctor-exp-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--accent); color: var(--primary);
+    padding: 0.25rem 0.625rem; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 700;
+}
+.doctor-info { padding: 1.5rem; }
+.doctor-name {
+    font-family: var(--font-display); font-size: 1.3rem;
+    font-weight: 600; color: var(--primary);
+}
+.doctor-desig {
+    font-size: 0.75rem; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    font-weight: 700; margin: 0.3rem 0 0.875rem;
+}
+.doctor-qual {
+    font-size: 0.8rem; color: var(--text-medium);
+    background: var(--off-white); padding: 0.4rem 0.75rem;
+    border-radius: 100px; display: inline-block; margin-bottom: 0.875rem;
+}
+.doctor-spec { font-size: 0.83rem; color: var(--text-medium); line-height: 1.6; }
+
+/* ══════════════════════════════
+   TESTIMONIALS STRIP
+══════════════════════════════ */
+.about-testimonials { padding: 5rem 2rem; background: white; }
+.about-testimonials-inner { max-width: 1200px; margin: 0 auto; }
+.testimonials-row {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem; margin-top: 3rem;
+}
+.t-card {
+    background: var(--off-white); border-radius: var(--radius-lg);
+    border: 1px solid var(--border); padding: 2rem;
+}
+.t-stars { color: var(--accent); margin-bottom: 0.875rem; letter-spacing: 2px; }
+.t-text { font-size: 0.9rem; color: var(--text-medium); line-height: 1.75; font-style: italic; margin-bottom: 1.25rem; }
+.t-author { display: flex; align-items: center; gap: 0.875rem; }
+.t-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--primary); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.875rem; overflow: hidden; flex-shrink: 0;
+}
+.t-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.t-name { font-weight: 700; color: var(--primary); font-size: 0.875rem; }
+.t-via { font-size: 0.75rem; color: var(--text-light); }
+
+/* ══════════════════════════════
+   CTA
+══════════════════════════════ */
+.about-cta {
+    padding: 6rem 2rem;
+    background: linear-gradient(135deg, var(--accent), #e8c96d);
+    text-align: center;
+}
+.about-cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--primary); margin-bottom: 0.875rem;
+}
+.about-cta p { color: rgba(26,74,74,0.75); font-size: 1rem; margin-bottom: 2.5rem; }
+.cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media (max-width: 1024px) {
+    .story-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .doctors-grid { grid-template-columns: 1fr 1fr; }
+    .tour-features { grid-template-columns: 1fr 1fr; }
+    .values-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+    .stats-bar-inner { grid-template-columns: 1fr 1fr; }
+    .stat-block { border-right: none; border-bottom: 1px solid rgba(26,74,74,0.1); }
+    .timeline::before { left: 22px; }
+    .timeline-item, .timeline-item:nth-child(even) { flex-direction: row; }
+    .timeline-item:nth-child(odd) .timeline-content { text-align: left; }
+    .timeline-spacer { display: none; }
+    .testimonials-row { grid-template-columns: 1fr; }
+    .tour-features { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+    .doctors-grid { grid-template-columns: 1fr; }
+    .values-grid { grid-template-columns: 1fr; }
+    .stats-bar-inner { grid-template-columns: 1fr 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── HERO ── -->
+<section class="about-hero">
+    <div class="about-hero-inner">
+        <div class="section-label" style="justify-content:center; color:var(--accent);">Our Story</div>
+        <h1>Where <em>Excellence</em><br>Meets Every Smile</h1>
+        <p>Reface Dentofacial Centre was founded with a single vision — to bring world-class dental care to Chennai with warmth, precision, and passion for beautiful smiles.</p>
+        <div class="hero-pill-row">
+            <span class="hero-pill"><i class="fas fa-map-marker-alt"></i> Kilpauk, Chennai</span>
+            <span class="hero-pill"><i class="fas fa-certificate"></i> Certified Specialists</span>
+            <span class="hero-pill"><i class="fas fa-globe"></i> Internationally Trained</span>
+            <span class="hero-pill"><i class="fas fa-star"></i> 4.9★ Google Rating</span>
+        </div>
+    </div>
+</section>
+
+<!-- ── STATS BAR ── -->
+<div class="stats-bar">
+    <div class="stats-bar-inner">
+        <div class="stat-block">
+            <div class="num">15+</div>
+            <div class="lbl">Years of Excellence</div>
+        </div>
+        <div class="stat-block">
+            <div class="num">5000+</div>
+            <div class="lbl">Happy Patients</div>
+        </div>
+        <div class="stat-block">
+            <div class="num">20+</div>
+            <div class="lbl">Dental Services</div>
+        </div>
+        <div class="stat-block">
+            <div class="num">4.9★</div>
+            <div class="lbl">Google Rating</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── OUR STORY ── -->
+<section class="story-section">
+    <div class="story-inner">
+        <div class="story-content">
+            <div class="section-label">Our Story</div>
+            <h2 class="section-title">More Than a<br>Dental Clinic</h2>
+            <div class="story-body">
+                <p>Reface Dentofacial Centre of Excellence was born from a desire to bridge the gap between international dental standards and the warmth of personalised care right here in Chennai. We believe every patient deserves the same quality of treatment that was once only available abroad.</p>
+                <p>Founded in Kilpauk, our clinic quickly became a trusted destination for patients seeking not just treatments, but complete smile transformations — from simple cleanings to complex jaw surgeries. Our team of internationally trained specialists brings global expertise with a local, compassionate touch.</p>
+                <p>At Reface, we invest in the latest technology, from 3D virtual jaw planning to Invisalign certification, ensuring that every patient benefits from the most advanced, comfortable and effective care available today.</p>
+            </div>
+            <div class="story-signature">
+                <div class="story-sig-avatar">A</div>
+                <div>
+                    <div class="story-sig-name">Dr. Arvind Sivakumar</div>
+                    <div class="story-sig-role">Founder & Chief Orthodontist, Reface</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-visual">
+            <div class="story-highlight-card">
+                <div class="sh-icon"><i class="fas fa-globe"></i></div>
+                <div>
+                    <div class="sh-title">International Training</div>
+                    <div class="sh-desc">Our doctors have trained and practiced in leading dental institutions across India and abroad, bringing world-class expertise to Chennai.</div>
+                </div>
+            </div>
+            <div class="story-highlight-card">
+                <div class="sh-icon"><i class="fas fa-microscope"></i></div>
+                <div>
+                    <div class="sh-title">Cutting-edge Technology</div>
+                    <div class="sh-desc">3D surgical simulation, digital impressions, laser dentistry and Invisalign — we use technology that gives you better outcomes with less discomfort.</div>
+                </div>
+            </div>
+            <div class="story-highlight-card">
+                <div class="sh-icon"><i class="fas fa-heart"></i></div>
+                <div>
+                    <div class="sh-title">Patient-First Philosophy</div>
+                    <div class="sh-desc">Every decision we make is guided by what's best for you. We take time to listen, explain, and personalise every treatment plan to your unique needs.</div>
+                </div>
+            </div>
+            <div class="story-highlight-card">
+                <div class="sh-icon"><i class="fas fa-shield-alt"></i></div>
+                <div>
+                    <div class="sh-title">Highest Hygiene Standards</div>
+                    <div class="sh-desc">We follow strict sterilisation and infection control protocols to ensure a safe, hygienic environment for every single patient.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════
+     360° VIRTUAL TOUR
+══════════════════════════════ -->
+<section class="tour-section">
+    <div class="tour-inner">
+        <div class="tour-header">
+            <div class="section-label">Explore Our Clinic</div>
+            <h2 class="section-title">Take a 360° Virtual Tour</h2>
+            <p>Step inside Reface from the comfort of your home. Explore our modern, welcoming clinic before your first visit — no surprises, just smiles.</p>
+        </div>
+
+        <div class="tour-container">
+            <div class="tour-badge">
+                <i class="fas fa-circle" style="font-size:0.5rem"></i> Live 360° Tour
+            </div>
+            <div class="tour-iframe-wrap">
+                <iframe
+                    width="100%"
+                    height="600"
+                    frameborder="0"
+                    allow="xr-spatial-tracking; gyroscope; accelerometer"
+                    allowfullscreen
+                    scrolling="no"
+                    src="https://kuula.co/share/collection/7ZBPQ?logo=1&info=1&fs=1&vr=0&sd=1&thumbs=1">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="tour-features">
+            <div class="tour-feature">
+                <i class="fas fa-couch"></i>
+                <h4>Comfortable Waiting Area</h4>
+                <p>A calm, welcoming space designed to ease any dental anxiety before your appointment.</p>
+            </div>
+            <div class="tour-feature">
+                <i class="fas fa-microscope"></i>
+                <h4>State-of-the-Art Equipment</h4>
+                <p>The latest dental technology for precise, comfortable and efficient treatments.</p>
+            </div>
+            <div class="tour-feature">
+                <i class="fas fa-shield-alt"></i>
+                <h4>Sterile & Safe Environment</h4>
+                <p>Hospital-grade sterilisation protocols maintained at every step of your visit.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── OUR VALUES ── -->
+<section class="values-section">
+    <div class="values-inner">
+        <div style="text-align:center; max-width:600px; margin:0 auto;">
+            <div class="section-label" style="justify-content:center;">What We Stand For</div>
+            <h2 class="section-title">Our Core Values</h2>
+            <p class="section-subtitle" style="margin:0 auto;">Every interaction at Reface is guided by these principles that shape who we are.</p>
+        </div>
+
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-award"></i></div>
+                <h3>Excellence</h3>
+                <p>We hold ourselves to the highest clinical standards. Continuous learning, certifications and the use of cutting-edge technology ensure the best outcomes for every patient.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-heart"></i></div>
+                <h3>Compassion</h3>
+                <p>Dental anxiety is real. Our team is trained to listen, comfort and guide you through every step of your treatment with patience and empathy.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-eye"></i></div>
+                <h3>Transparency</h3>
+                <p>No surprises, no hidden charges. We believe in honest conversations about your treatment plan, timeline, and costs before we begin anything.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-lightbulb"></i></div>
+                <h3>Innovation</h3>
+                <p>From virtual jaw surgery planning to Invisalign, we embrace technology that makes dental care faster, safer and more comfortable for you.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-users"></i></div>
+                <h3>Community</h3>
+                <p>Reface is more than a clinic — it's a community. We build long-term relationships with our patients and their families through trust and consistent care.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon"><i class="fas fa-leaf"></i></div>
+                <h3>Responsibility</h3>
+                <p>We are committed to sustainable, ethical dental practices — responsible with materials, mindful of our environment, and accountable to every patient.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── JOURNEY / TIMELINE ── -->
+<section class="timeline-section">
+    <div class="timeline-inner">
+        <div style="text-align:center; max-width:580px; margin:0 auto;">
+            <div class="section-label" style="justify-content:center;">Our Journey</div>
+            <h2 class="section-title">Milestones That<br>Shaped Reface</h2>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2009</div>
+                    <h4>The Beginning</h4>
+                    <p>Reface Dentofacial Centre opens its doors in Kilpauk, Chennai with a vision to deliver internationally standard dental care locally.</p>
+                </div>
+                <div class="timeline-dot"><i class="fas fa-flag"></i></div>
+                <div class="timeline-spacer"></div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-spacer"></div>
+                <div class="timeline-dot"><i class="fas fa-certificate"></i></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2013</div>
+                    <h4>Invisalign Certification</h4>
+                    <p>Reface becomes one of the first certified Invisalign providers in Kilpauk, expanding clear aligner treatment access in Chennai.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2016</div>
+                    <h4>Advanced Implantology Unit</h4>
+                    <p>Launch of the dedicated Corticobasal and Full-Arch implant program — offering same-day tooth loading for complex cases.</p>
+                </div>
+                <div class="timeline-dot"><i class="fas fa-tooth"></i></div>
+                <div class="timeline-spacer"></div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-spacer"></div>
+                <div class="timeline-dot"><i class="fas fa-laptop-medical"></i></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2019</div>
+                    <h4>Virtual Jaw Surgery Planning</h4>
+                    <p>Introduction of 3D digital jaw surgery simulation — allowing patients to preview their results before orthognathic surgery.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-year">2022</div>
+                    <h4>Clinic Expansion</h4>
+                    <p>Reface expands with new treatment suites, a dedicated pediatric dental zone, and upgraded digital imaging technology.</p>
+                </div>
+                <div class="timeline-dot"><i class="fas fa-expand"></i></div>
+                <div class="timeline-spacer"></div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-spacer"></div>
+                <div class="timeline-dot"><i class="fas fa-star"></i></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">Today</div>
+                    <h4>5000+ Smiles & Counting</h4>
+                    <p>Reface continues to grow as Chennai's most trusted dentofacial centre — with a team of specialists dedicated to your perfect smile.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── DOCTORS ── -->
+<section class="doctors-section">
+    <div class="doctors-inner">
+        <div class="section-label">The Experts</div>
+        <h2 class="section-title">Meet Our Specialists</h2>
+        <p class="section-subtitle">A team of internationally trained doctors who bring global expertise and genuine care to every appointment.</p>
+
+        <div class="doctors-grid">
+            {% for doctor in doctors %}
+            <div class="doctor-card">
+                <div class="doctor-photo">
+                    {% if doctor.photo %}
+                        <img src="{{ doctor.photo.url }}" alt="{{ doctor.name }}">
+                    {% else %}
+                        <i class="fas fa-user-md"></i>
+                    {% endif %}
+                    <div class="doctor-photo-overlay">
+                        <span class="doctor-exp-badge">
+                            <i class="fas fa-briefcase"></i> {{ doctor.experience_years }}+ yrs
+                        </span>
+                    </div>
+                </div>
+                <div class="doctor-info">
+                    <div class="doctor-name">{{ doctor.name }}</div>
+                    <div class="doctor-desig">{{ doctor.designation }}</div>
+                    <span class="doctor-qual">{{ doctor.qualification }}</span>
+                    <p class="doctor-spec">{{ doctor.specialization|truncatewords:20 }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Static fallback doctors -->
+            <div class="doctor-card">
+                <div class="doctor-photo"><i class="fas fa-user-md"></i>
+                    <div class="doctor-photo-overlay"><span class="doctor-exp-badge"><i class="fas fa-briefcase"></i> 15+ yrs</span></div>
+                </div>
+                <div class="doctor-info">
+                    <div class="doctor-name">Dr. Arvind Sivakumar</div>
+                    <div class="doctor-desig">Chief Orthodontist & Founder</div>
+                    <span class="doctor-qual">MDS Orthodontics</span>
+                    <p class="doctor-spec">Invisalign specialist, jaw surgery expert and lead orthodontist with 15+ years of clinical excellence.</p>
+                </div>
+            </div>
+            <div class="doctor-card">
+                <div class="doctor-photo"><i class="fas fa-user-md"></i>
+                    <div class="doctor-photo-overlay"><span class="doctor-exp-badge"><i class="fas fa-briefcase"></i> 12+ yrs</span></div>
+                </div>
+                <div class="doctor-info">
+                    <div class="doctor-name">Dr. Rama Raji</div>
+                    <div class="doctor-desig">Senior Implantologist</div>
+                    <span class="doctor-qual">MDS Prosthodontics</span>
+                    <p class="doctor-spec">Expert in Corticobasal implants, full-arch restorations and same-day implant loading procedures.</p>
+                </div>
+            </div>
+            <div class="doctor-card">
+                <div class="doctor-photo"><i class="fas fa-user-md"></i>
+                    <div class="doctor-photo-overlay"><span class="doctor-exp-badge"><i class="fas fa-briefcase"></i> 10+ yrs</span></div>
+                </div>
+                <div class="doctor-info">
+                    <div class="doctor-name">Dr. Taher Ahmed</div>
+                    <div class="doctor-desig">Cosmetic & Restorative Dentist</div>
+                    <span class="doctor-qual">BDS, MFDS</span>
+                    <p class="doctor-spec">Specialist in smile makeovers, veneers, teeth whitening and laser cosmetic dentistry procedures.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+{% if testimonials %}
+<section class="about-testimonials">
+    <div class="about-testimonials-inner">
+        <div class="section-label">Patient Stories</div>
+        <h2 class="section-title">What Our Patients Say</h2>
+        <div class="testimonials-row">
+            {% for t in testimonials %}
+            <div class="t-card">
+                <div class="t-stars">{% for i in "12345" %}{% if forloop.counter <= t.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+                <p class="t-text">"{{ t.review }}"</p>
+                <div class="t-author">
+                    <div class="t-avatar">
+                        {% if t.patient_photo %}<img src="{{ t.patient_photo.url }}" alt="">
+                        {% else %}{{ t.patient_name|first }}{% endif %}
+                    </div>
+                    <div>
+                        <div class="t-name">{{ t.patient_name }}</div>
+                        <div class="t-via">via {{ t.source }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ── CTA ── -->
+<section class="about-cta">
+    <div class="section-label" style="justify-content:center;">Take the First Step</div>
+    <h2>Ready to Meet the Team?</h2>
+    <p>Book a free consultation and experience the Reface difference — world-class care with a personal touch.</p>
+    <div class="cta-row">
+        <a href="{% url 'book_appointment' %}" class="btn btn-primary">
+            <i class="fas fa-calendar-plus"></i> Book Free Consultation
+        </a>
+        <a href="{% url 'contact' %}" class="btn btn-outline" style="border-color:var(--primary)">
+            <i class="fas fa-phone"></i> Call Us Today
+        </a>
+    </div>
+</section>
+
+<!-- WhatsApp -->
+<a href="https://wa.me/919999999999" class="whatsapp-float" title="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animate stats on scroll
+const statNums = document.querySelectorAll('.stat-block .num');
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, { threshold: 0.3 });
+
+statNums.forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'all 0.6s ease';
+    observer.observe(el);
+});
+
+// Timeline scroll animation
+const timelineItems = document.querySelectorAll('.timeline-item');
+const tlObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }, i * 100);
+        }
+    });
+}, { threshold: 0.2 });
+
+timelineItems.forEach(item => {
+    item.style.opacity = '0';
+    item.style.transform = 'translateY(30px)';
+    item.style.transition = 'all 0.6s ease';
+    tlObserver.observe(item);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,587 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ service.name }} | Reface Dentofacial Centre, Chennai{% endblock %}
+{% block meta_desc %}{{ service.short_description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── BREADCRUMB ── */
+.breadcrumb-bar {
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 0.875rem 2rem;
+}
+.breadcrumb-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.8rem; color: var(--text-light);
+}
+.breadcrumb-inner a { color: var(--text-light); text-decoration: none; transition: color 0.2s; }
+.breadcrumb-inner a:hover { color: var(--primary); }
+.breadcrumb-inner i { font-size: 0.6rem; color: var(--border); }
+.breadcrumb-inner span { color: var(--primary); font-weight: 600; }
+
+/* ── HERO ── */
+.detail-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #0d2e2e 100%);
+    padding: 4rem 2rem 3rem;
+    position: relative; overflow: hidden;
+}
+.detail-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='40' cy='40' r='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+.detail-hero-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 360px;
+    gap: 3rem; align-items: center;
+    position: relative; z-index: 1;
+}
+.detail-hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--accent); padding: 0.35rem 0.875rem;
+    border-radius: 100px; font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;
+    margin-bottom: 1.25rem;
+}
+.detail-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    color: white; line-height: 1.1; margin-bottom: 1.25rem;
+}
+.detail-hero-desc {
+    color: rgba(255,255,255,0.75);
+    font-size: 1rem; line-height: 1.75; margin-bottom: 2rem;
+}
+.detail-hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+.detail-hero-card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-lg); padding: 2rem;
+    text-align: center;
+}
+.detail-hero-card .big-icon {
+    font-size: 4rem; color: var(--accent);
+    margin-bottom: 1.25rem; display: block;
+}
+.detail-hero-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem; color: white; margin-bottom: 0.5rem;
+}
+.detail-hero-card p { font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+.detail-hero-stats {
+    display: flex; gap: 1.5rem; margin-top: 1.5rem;
+    padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);
+    justify-content: center;
+}
+.detail-stat .num {
+    font-family: var(--font-display);
+    font-size: 1.75rem; color: var(--accent); font-weight: 600; line-height: 1;
+}
+.detail-stat .lbl { font-size: 0.72rem; color: rgba(255,255,255,0.55); margin-top: 3px; }
+
+/* ── MAIN CONTENT ── */
+.detail-main { padding: 4rem 2rem; background: var(--off-white); }
+.detail-main-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 320px;
+    gap: 3rem; align-items: start;
+}
+
+/* ── CONTENT BODY ── */
+.detail-content {}
+.content-card {
+    background: white; border-radius: var(--radius-lg);
+    border: 1px solid var(--border); padding: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+.content-card h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem; color: var(--primary);
+    margin-bottom: 1.25rem; padding-bottom: 0.875rem;
+    border-bottom: 2px solid var(--off-white);
+    display: flex; align-items: center; gap: 10px;
+}
+.content-card h2 i { color: var(--accent); font-size: 1.1rem; }
+.content-body {
+    color: var(--text-medium);
+    line-height: 1.8; font-size: 0.925rem;
+}
+.content-body p { margin-bottom: 1rem; }
+
+/* ── BENEFITS GRID ── */
+.benefits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
+.benefit-item {
+    display: flex; gap: 0.875rem; align-items: flex-start;
+    padding: 1rem; background: var(--off-white);
+    border-radius: 10px;
+}
+.benefit-item .check {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--primary); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; flex-shrink: 0; margin-top: 1px;
+}
+.benefit-item .text strong { display: block; font-size: 0.875rem; color: var(--primary); margin-bottom: 2px; }
+.benefit-item .text span { font-size: 0.8rem; color: var(--text-medium); line-height: 1.5; }
+
+/* ── PROCESS STEPS ── */
+.process-steps { display: flex; flex-direction: column; gap: 1rem; }
+.step {
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    padding: 1.25rem; background: var(--off-white); border-radius: 10px;
+}
+.step-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--primary); color: var(--accent);
+    font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.step-text strong { display: block; font-size: 0.9rem; color: var(--primary); margin-bottom: 3px; }
+.step-text span { font-size: 0.82rem; color: var(--text-medium); line-height: 1.5; }
+
+/* ── FAQ ── */
+.faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.faq-item {
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+.faq-q {
+    padding: 1rem 1.25rem;
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--primary);
+    background: white; transition: background 0.2s;
+}
+.faq-q:hover { background: var(--off-white); }
+.faq-q i { color: var(--accent); transition: transform 0.3s; font-size: 0.8rem; flex-shrink: 0; }
+.faq-a {
+    padding: 0 1.25rem;
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s;
+    font-size: 0.875rem; color: var(--text-medium); line-height: 1.7;
+    background: white;
+}
+.faq-item.open .faq-a { max-height: 200px; padding: 0 1.25rem 1.25rem; }
+.faq-item.open .faq-q i { transform: rotate(180deg); }
+
+/* ── SIDEBAR ── */
+.detail-sidebar {}
+.sidebar-card {
+    background: white; border-radius: var(--radius-lg);
+    border: 1px solid var(--border); overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+.sidebar-card-header {
+    background: var(--primary); padding: 1.25rem 1.5rem;
+    color: white;
+}
+.sidebar-card-header h3 { font-size: 1rem; font-weight: 600; }
+.sidebar-card-header p { font-size: 0.78rem; color: rgba(255,255,255,0.65); margin-top: 3px; }
+.sidebar-card-body { padding: 1.5rem; }
+.book-form .form-group { margin-bottom: 1rem; }
+.book-form label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.4rem; }
+.book-form select, .book-form input {
+    width: 100%; padding: 0.65rem 0.875rem;
+    border: 1.5px solid var(--border); border-radius: var(--radius);
+    font-family: var(--font-body); font-size: 0.875rem;
+    outline: none; transition: border-color 0.2s;
+}
+.book-form select:focus, .book-form input:focus { border-color: var(--primary); }
+.btn-book {
+    width: 100%; padding: 0.875rem;
+    background: var(--accent); color: var(--primary);
+    border: none; border-radius: var(--radius);
+    font-family: var(--font-body); font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-book:hover { background: var(--accent-light); }
+.contact-list { list-style: none; }
+.contact-list li {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 0.75rem 0; border-bottom: 1px solid var(--border);
+    font-size: 0.85rem; color: var(--text-medium);
+}
+.contact-list li:last-child { border-bottom: none; padding-bottom: 0; }
+.contact-list li i { color: var(--accent); width: 16px; margin-top: 2px; flex-shrink: 0; }
+.contact-list a { color: var(--text-medium); text-decoration: none; }
+.contact-list a:hover { color: var(--primary); }
+
+/* ── RELATED ── */
+.related-section { padding: 4rem 2rem; background: white; }
+.related-inner { max-width: 1280px; margin: 0 auto; }
+.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
+.related-card {
+    background: var(--off-white); border-radius: var(--radius-lg);
+    border: 1px solid var(--border); padding: 1.75rem;
+    text-decoration: none; color: inherit; display: block;
+    transition: all 0.3s;
+}
+.related-card:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); border-color: var(--primary); }
+.related-card .icon {
+    width: 44px; height: 44px; background: var(--primary);
+    border-radius: 10px; display: flex; align-items: center;
+    justify-content: center; color: var(--accent);
+    font-size: 1.1rem; margin-bottom: 1rem;
+}
+.related-card h4 { font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; font-size: 0.95rem; }
+.related-card p { font-size: 0.82rem; color: var(--text-medium); line-height: 1.6; }
+.related-card .arrow {
+    display: inline-flex; align-items: center; gap: 5px;
+    color: var(--accent); font-size: 0.78rem; font-weight: 700;
+    margin-top: 0.875rem;
+}
+
+@media (max-width: 1024px) {
+    .detail-hero-inner { grid-template-columns: 1fr; }
+    .detail-hero-card { display: none; }
+    .detail-main-inner { grid-template-columns: 1fr; }
+    .detail-sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .related-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+    .benefits-grid { grid-template-columns: 1fr; }
+    .detail-sidebar { grid-template-columns: 1fr; }
+    .related-grid { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+    <div class="breadcrumb-inner">
+        <a href="{% url 'home' %}">Home</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="{% url 'services' %}">Services</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>{{ service.name }}</span>
+    </div>
+</div>
+
+<!-- HERO -->
+<section class="detail-hero">
+    <div class="detail-hero-inner">
+        <div>
+            <div class="detail-hero-badge">
+                <i class="fas fa-tag"></i> {{ service.get_category_display }}
+            </div>
+            <h1>{{ service.name }}</h1>
+            <p class="detail-hero-desc">{{ service.short_description }}</p>
+            <div class="detail-hero-actions">
+                <a href="{% url 'book_appointment' %}" class="btn btn-accent">
+                    <i class="fas fa-calendar-plus"></i> Book Consultation
+                </a>
+                <a href="{% url 'contact' %}" class="btn btn-white">
+                    <i class="fas fa-phone"></i> Call Us
+                </a>
+            </div>
+        </div>
+
+        <div class="detail-hero-card">
+            <i class="{{ service.icon|default:'fas fa-tooth' }} big-icon"></i>
+            <h3>{{ service.name }}</h3>
+            <p>Performed by internationally trained specialists using the latest technology.</p>
+            <div class="detail-hero-stats">
+                <div class="detail-stat">
+                    <div class="num">5★</div>
+                    <div class="lbl">Rating</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="num">500+</div>
+                    <div class="lbl">Cases</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="num">100%</div>
+                    <div class="lbl">Safe</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MAIN -->
+<section class="detail-main">
+    <div class="detail-main-inner">
+
+        <!-- LEFT: Content -->
+        <div class="detail-content">
+
+            <!-- Overview -->
+            <div class="content-card">
+                <h2><i class="fas fa-info-circle"></i> About This Treatment</h2>
+                <div class="content-body">
+                    {{ service.full_description|linebreaks }}
+                </div>
+            </div>
+
+            <!-- Benefits -->
+            <div class="content-card">
+                <h2><i class="fas fa-check-circle"></i> Key Benefits</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="check"><i class="fas fa-check"></i></div>
+                        <div class="text">
+                            <strong>Expert Specialists</strong>
+                            <span>Performed by internationally trained and certified doctors</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="check"><i class="fas fa-check"></i></div>
+                        <div class="text">
+                            <strong>Latest Technology</strong>
+                            <span>State-of-the-art equipment for precise, comfortable procedures</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="check"><i class="fas fa-check"></i></div>
+                        <div class="text">
+                            <strong>Personalised Care</strong>
+                            <span>Every treatment plan customised to your specific needs</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="check"><i class="fas fa-check"></i></div>
+                        <div class="text">
+                            <strong>Affordable Plans</strong>
+                            <span>Flexible payment options and EMI available</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="check"><i class="fas fa-check"></i></div>
+                        <div class="text">
+                            <strong>Painless Procedure</strong>
+                            <span>Minimally invasive techniques for a comfortable experience</span>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="check"><i class="fas fa-check"></i></div>
+                        <div class="text">
+                            <strong>Long-lasting Results</strong>
+                            <span>Durable outcomes with proper aftercare guidance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Process -->
+            <div class="content-card">
+                <h2><i class="fas fa-list-ol"></i> Treatment Process</h2>
+                <div class="process-steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-text">
+                            <strong>Initial Consultation</strong>
+                            <span>Our specialist will assess your dental health, take X-rays if needed, and discuss your goals and concerns in detail.</span>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-text">
+                            <strong>Customised Treatment Plan</strong>
+                            <span>A personalised treatment plan is created for you, including timeline, steps involved, and cost breakdown.</span>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-text">
+                            <strong>Treatment Begins</strong>
+                            <span>Your treatment is carried out with the utmost precision using the latest equipment in our comfortable clinic.</span>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">4</div>
+                        <div class="step-text">
+                            <strong>Follow-up & Aftercare</strong>
+                            <span>We schedule regular follow-ups to monitor progress and provide all the aftercare guidance you need.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="content-card">
+                <h2><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-q">
+                            Is {{ service.name }} painful?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-a">
+                            We use advanced techniques and local anaesthesia to ensure that the procedure is as comfortable and painless as possible. Most patients report minimal discomfort during and after treatment.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q">
+                            How long does the treatment take?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-a">
+                            The duration varies depending on the complexity of your case. During your initial consultation, our specialist will give you a clear timeline tailored to your specific needs.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q">
+                            How much does {{ service.name }} cost in Chennai?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-a">
+                            The cost depends on your individual case. We offer transparent pricing with no hidden charges. Easy EMI options are also available. Book a free consultation to get an accurate quote.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q">
+                            Am I a good candidate for this treatment?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-a">
+                            Most patients are suitable candidates. Our specialist will evaluate your oral health during the consultation and let you know if you are a good candidate for {{ service.name }}.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q">
+                            How do I maintain results after treatment?
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-a">
+                            We provide detailed aftercare instructions and schedule follow-up visits to ensure long-lasting results. Good oral hygiene and regular checkups are key to maintaining your smile.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT: Sidebar -->
+        <div class="detail-sidebar">
+
+            <!-- Quick Book -->
+            <div class="sidebar-card">
+                <div class="sidebar-card-header">
+                    <h3><i class="fas fa-calendar-plus" style="color:var(--accent);margin-right:8px"></i>Book Appointment</h3>
+                    <p>Free consultation • Confirmed in 2 hrs</p>
+                </div>
+                <div class="sidebar-card-body">
+                    <form action="{% url 'book_appointment' %}" method="get" class="book-form">
+                        <div class="form-group">
+                            <label>Your Name</label>
+                            <input type="text" name="name" placeholder="Enter your name">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" name="phone" placeholder="+91 99999 99999">
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Date</label>
+                            <input type="date" name="date">
+                        </div>
+                        <button type="submit" class="btn-book">
+                            <i class="fas fa-calendar-check"></i> Book Now
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="sidebar-card">
+                <div class="sidebar-card-header">
+                    <h3><i class="fas fa-phone-alt" style="color:var(--accent);margin-right:8px"></i>Contact Us</h3>
+                    <p>We're here to help</p>
+                </div>
+                <div class="sidebar-card-body">
+                    <ul class="contact-list">
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span><a href="tel:+919999999999">+91 99999 99999</a></span>
+                        </li>
+                        <li>
+                            <i class="fab fa-whatsapp"></i>
+                            <span><a href="https://wa.me/919999999999">Chat on WhatsApp</a></span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span><a href="mailto:hello@reface.in">hello@reface.in</a></span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Mon–Sat: 9:30 AM – 8:00 PM</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Kilpauk, Chennai – 600010</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Why Reface -->
+            <div class="sidebar-card">
+                <div class="sidebar-card-header">
+                    <h3><i class="fas fa-star" style="color:var(--accent);margin-right:8px"></i>Why Choose Reface?</h3>
+                </div>
+                <div class="sidebar-card-body">
+                    <ul class="contact-list">
+                        <li><i class="fas fa-check" style="color:var(--success)"></i><span>Internationally trained doctors</span></li>
+                        <li><i class="fas fa-check" style="color:var(--success)"></i><span>Certified Invisalign provider</span></li>
+                        <li><i class="fas fa-check" style="color:var(--success)"></i><span>Virtual 3D treatment planning</span></li>
+                        <li><i class="fas fa-check" style="color:var(--success)"></i><span>Painless, modern techniques</span></li>
+                        <li><i class="fas fa-check" style="color:var(--success)"></i><span>Easy EMI / payment plans</span></li>
+                        <li><i class="fas fa-check" style="color:var(--success)"></i><span>4.9★ Google rating</span></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- RELATED SERVICES -->
+{% if related %}
+<section class="related-section">
+    <div class="related-inner">
+        <div class="section-label">You Might Also Need</div>
+        <h2 class="section-title">Related Services</h2>
+        <div class="related-grid">
+            {% for r in related %}
+            <a href="{% url 'service_detail' r.slug %}" class="related-card">
+                <div class="icon"><i class="{{ r.icon|default:'fas fa-tooth' }}"></i></div>
+                <h4>{{ r.name }}</h4>
+                <p>{{ r.short_description|truncatewords:18 }}</p>
+                <div class="arrow">View Service <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- WhatsApp -->
+<a href="https://wa.me/919999999999" class="whatsapp-float" title="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+        const item = q.parentElement;
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+    });
+});
+
+// Set min date
+const dateInput = document.querySelector('input[type="date"]');
+if (dateInput) dateInput.min = new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}

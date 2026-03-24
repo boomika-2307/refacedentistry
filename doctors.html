@@ -1,0 +1,483 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Doctors | Reface Dentofacial Centre, Chennai{% endblock %}
+{% block meta_desc %}Meet the internationally trained specialist doctors at Reface Dentofacial Centre, Kilpauk Chennai — experts in Invisalign, Implants, Orthodontics, Cosmetic Dentistry and Jaw Surgery.{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* ══ HERO ══ */
+.doctors-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #0b2a2a 55%, #163322 100%);
+    padding: 5.5rem 2rem 4.5rem;
+    text-align: center; position: relative; overflow: hidden;
+}
+.doctors-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/svg%3E");
+}
+.doctors-hero-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+.doctors-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    color: white; line-height: 1.08; margin-bottom: 1.25rem;
+}
+.doctors-hero h1 em { color: var(--accent); font-style: italic; }
+.doctors-hero p { color: rgba(255,255,255,0.7); font-size: 1.05rem; line-height: 1.75; max-width: 580px; margin: 0 auto 2.5rem; }
+.hero-trust-row {
+    display: flex; gap: 1rem; justify-content: center;
+    flex-wrap: wrap;
+}
+.trust-pill {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.85);
+    padding: 0.45rem 1rem; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 500;
+}
+.trust-pill i { color: var(--accent); font-size: 0.7rem; }
+
+/* ══ SPECIALTY FILTER ══ */
+.specialty-bar {
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 1.1rem 2rem;
+    position: sticky; top: 72px; z-index: 100;
+    box-shadow: var(--shadow-sm);
+}
+.specialty-bar-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; gap: 0.625rem; flex-wrap: wrap;
+}
+.spec-label {
+    font-size: 0.75rem; font-weight: 700; color: var(--text-light);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    margin-right: 0.25rem; white-space: nowrap;
+}
+.spec-btn {
+    padding: 0.4rem 1rem; border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: white; color: var(--text-medium);
+    font-size: 0.8rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    font-family: var(--font-body);
+}
+.spec-btn:hover { border-color: var(--primary); color: var(--primary); }
+.spec-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+/* ══ MAIN SECTION ══ */
+.doctors-main { padding: 5rem 2rem; background: var(--off-white); }
+.doctors-main-inner { max-width: 1200px; margin: 0 auto; }
+.section-intro { margin-bottom: 3rem; }
+
+/* ══ DOCTOR CARDS ══ */
+.doctors-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+.doctor-card {
+    background: white; border-radius: var(--radius-lg);
+    border: 1px solid var(--border); overflow: hidden;
+    transition: all 0.35s; position: relative;
+}
+.doctor-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-8px); }
+
+.doctor-photo {
+    height: 300px; position: relative; overflow: hidden;
+    background: linear-gradient(160deg, var(--primary) 0%, #163a2a 100%);
+    display: flex; align-items: center; justify-content: center;
+}
+.doctor-photo-placeholder {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.75rem; color: rgba(255,255,255,0.2);
+}
+.doctor-photo-placeholder i { font-size: 6rem; }
+.doctor-photo-placeholder span { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.doctor-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.doctor-card:hover .doctor-photo img { transform: scale(1.04); }
+
+.doctor-photo-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,35,35,0.92) 0%, transparent 55%);
+    display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 1.5rem;
+    opacity: 0; transition: opacity 0.35s;
+}
+.doctor-card:hover .doctor-photo-overlay { opacity: 1; }
+.overlay-bio { color: rgba(255,255,255,0.85); font-size: 0.8rem; line-height: 1.6; }
+
+.doctor-exp-tag {
+    position: absolute; top: 1rem; right: 1rem;
+    background: var(--accent); color: var(--primary);
+    padding: 0.3rem 0.75rem; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 800;
+    display: flex; align-items: center; gap: 5px;
+    letter-spacing: 0.04em;
+}
+
+.doctor-body { padding: 1.75rem; }
+.doctor-name {
+    font-family: var(--font-display);
+    font-size: 1.35rem; font-weight: 600;
+    color: var(--primary); margin-bottom: 0.2rem;
+}
+.doctor-title {
+    font-size: 0.72rem; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800;
+    margin-bottom: 0.875rem;
+}
+.doctor-qual-badge {
+    display: inline-block;
+    background: var(--off-white); color: var(--text-medium);
+    padding: 0.3rem 0.75rem; border-radius: 100px;
+    font-size: 0.78rem; font-weight: 500; margin-bottom: 1rem;
+}
+.doctor-specialties {
+    display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem;
+}
+.specialty-tag {
+    background: rgba(26,74,74,0.07);
+    color: var(--primary); border: 1px solid rgba(26,74,74,0.12);
+    padding: 0.25rem 0.625rem; border-radius: 6px;
+    font-size: 0.72rem; font-weight: 600;
+}
+.doctor-divider { height: 1px; background: var(--border); margin-bottom: 1.25rem; }
+.doctor-actions { display: flex; gap: 0.75rem; }
+.btn-sm {
+    padding: 0.5rem 1rem; font-size: 0.8rem;
+    border-radius: var(--radius); font-weight: 600;
+    text-decoration: none; display: inline-flex;
+    align-items: center; gap: 6px; transition: all 0.2s;
+    border: none; cursor: pointer; font-family: var(--font-body);
+}
+.btn-sm-primary { background: var(--primary); color: white; flex: 1; justify-content: center; }
+.btn-sm-primary:hover { background: var(--primary-light); }
+.btn-sm-outline { border: 1.5px solid var(--border); color: var(--text-medium); background: white; }
+.btn-sm-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ══ WHY OUR TEAM ══ */
+.why-section { padding: 5rem 2rem; background: white; }
+.why-inner { max-width: 1200px; margin: 0 auto; }
+.why-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem; margin-top: 3rem;
+}
+.why-card {
+    text-align: center; padding: 2rem 1.5rem;
+    border-radius: var(--radius-lg); border: 1px solid var(--border);
+    transition: all 0.3s; background: white;
+}
+.why-card:hover { box-shadow: var(--shadow-md); transform: translateY(-5px); border-color: var(--primary); }
+.why-icon {
+    width: 60px; height: 60px; border-radius: 16px;
+    background: var(--off-white); margin: 0 auto 1.25rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; color: var(--primary); transition: all 0.3s;
+}
+.why-card:hover .why-icon { background: var(--primary); color: var(--accent); }
+.why-card h4 { font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; font-size: 0.95rem; }
+.why-card p { font-size: 0.82rem; color: var(--text-medium); line-height: 1.65; }
+
+/* ══ CREDENTIALS STRIP ══ */
+.credentials-strip { background: var(--primary); padding: 3.5rem 2rem; }
+.credentials-inner { max-width: 1200px; margin: 0 auto; }
+.credentials-inner .section-title { color: white; }
+.credentials-inner .section-label { color: var(--accent); }
+.creds-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem; margin-top: 2.5rem;
+}
+.cred-item {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-lg); padding: 1.5rem;
+    display: flex; gap: 1rem; align-items: flex-start;
+}
+.cred-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--accent); color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+}
+.cred-title { color: white; font-weight: 700; font-size: 0.9rem; margin-bottom: 0.2rem; }
+.cred-desc { color: rgba(255,255,255,0.55); font-size: 0.8rem; line-height: 1.5; }
+
+/* ══ CTA ══ */
+.doctors-cta {
+    padding: 5.5rem 2rem;
+    background: linear-gradient(135deg, var(--accent), #e8c96d);
+    text-align: center;
+}
+.doctors-cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3.5vw, 3rem);
+    color: var(--primary); margin-bottom: 0.875rem;
+}
+.doctors-cta p { color: rgba(26,74,74,0.72); font-size: 1rem; margin-bottom: 2.25rem; }
+.cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 1024px) {
+    .doctors-grid { grid-template-columns: repeat(2, 1fr); }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .creds-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+    .doctors-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: 1fr 1fr; }
+    .creds-grid { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="doctors-hero">
+    <div class="doctors-hero-inner">
+        <div class="section-label" style="justify-content:center; color:var(--accent);">The Experts Behind Your Smile</div>
+        <h1>Meet Our <em>Specialist</em><br>Doctors</h1>
+        <p>Every smile transformed at Reface is backed by years of international training, continuous learning and a genuine passion for dental excellence.</p>
+        <div class="hero-trust-row">
+            <span class="trust-pill"><i class="fas fa-globe"></i> Internationally Trained</span>
+            <span class="trust-pill"><i class="fas fa-certificate"></i> Board Certified</span>
+            <span class="trust-pill"><i class="fas fa-magic"></i> Invisalign Certified</span>
+            <span class="trust-pill"><i class="fas fa-star"></i> 4.9★ Patient Rating</span>
+        </div>
+    </div>
+</section>
+
+<!-- SPECIALTY FILTER -->
+<div class="specialty-bar">
+    <div class="specialty-bar-inner">
+        <span class="spec-label">Specialty:</span>
+        <button class="spec-btn active" data-filter="all">All Doctors</button>
+        <button class="spec-btn" data-filter="orthodontics">Orthodontics</button>
+        <button class="spec-btn" data-filter="implants">Implants</button>
+        <button class="spec-btn" data-filter="cosmetic">Cosmetic</button>
+        <button class="spec-btn" data-filter="surgery">Oral Surgery</button>
+        <button class="spec-btn" data-filter="general">General</button>
+    </div>
+</div>
+
+<!-- DOCTORS GRID -->
+<section class="doctors-main">
+    <div class="doctors-main-inner">
+
+        <div class="doctors-grid" id="doctorsGrid">
+
+            {% for doctor in doctors %}
+            <div class="doctor-card" data-specialty="{{ doctor.specialization|lower }}">
+                <div class="doctor-photo">
+                    {% if doctor.photo %}
+                        <img src="{{ doctor.photo.url }}" alt="{{ doctor.name }}">
+                    {% else %}
+                        <div class="doctor-photo-placeholder">
+                            <i class="fas fa-user-md"></i>
+                            <span>Photo Coming Soon</span>
+                        </div>
+                    {% endif %}
+                    <div class="doctor-exp-tag">
+                        <i class="fas fa-briefcase"></i> {{ doctor.experience_years }}+ yrs
+                    </div>
+                    <div class="doctor-photo-overlay">
+                        <p class="overlay-bio">{{ doctor.bio|truncatewords:25 }}</p>
+                    </div>
+                </div>
+                <div class="doctor-body">
+                    <div class="doctor-name">{{ doctor.name }}</div>
+                    <div class="doctor-title">{{ doctor.designation }}</div>
+                    <span class="doctor-qual-badge">{{ doctor.qualification }}</span>
+                    <div class="doctor-specialties">
+                        {% for spec in doctor.specialization.split|slice:":4" %}
+                        <span class="specialty-tag">{{ spec }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="doctor-divider"></div>
+                    <div class="doctor-actions">
+                        <a href="{% url 'book_appointment' %}" class="btn-sm btn-sm-primary">
+                            <i class="fas fa-calendar-plus"></i> Book Appointment
+                        </a>
+                        <a href="{% url 'contact' %}" class="btn-sm btn-sm-outline">
+                            <i class="fas fa-phone"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+
+            <!-- STATIC FALLBACK -->
+            {% for doc in static_doctors %}
+            <div class="doctor-card" data-specialty="{{ doc.specialty }}">
+                <div class="doctor-photo">
+                    <div class="doctor-photo-placeholder">
+                        <i class="fas fa-user-md"></i>
+                        <span>Add Photo in Admin</span>
+                    </div>
+                    <div class="doctor-exp-tag">
+                        <i class="fas fa-briefcase"></i> {{ doc.exp }}+ yrs
+                    </div>
+                    <div class="doctor-photo-overlay">
+                        <p class="overlay-bio">{{ doc.bio }}</p>
+                    </div>
+                </div>
+                <div class="doctor-body">
+                    <div class="doctor-name">{{ doc.name }}</div>
+                    <div class="doctor-title">{{ doc.title }}</div>
+                    <span class="doctor-qual-badge">{{ doc.qual }}</span>
+                    <div class="doctor-specialties">
+                        {% for tag in doc.tags %}
+                        <span class="specialty-tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="doctor-divider"></div>
+                    <div class="doctor-actions">
+                        <a href="{% url 'book_appointment' %}" class="btn-sm btn-sm-primary">
+                            <i class="fas fa-calendar-plus"></i> Book Appointment
+                        </a>
+                        <a href="{% url 'contact' %}" class="btn-sm btn-sm-outline">
+                            <i class="fas fa-phone"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- WHY OUR TEAM -->
+<section class="why-section">
+    <div class="why-inner">
+        <div style="text-align:center; max-width:600px; margin:0 auto 0;">
+            <div class="section-label" style="justify-content:center;">What Sets Us Apart</div>
+            <h2 class="section-title">Why Our Doctors?</h2>
+            <p class="section-subtitle" style="margin:0 auto">Every member of our team is chosen not just for their clinical expertise, but for their commitment to patient care.</p>
+        </div>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-graduation-cap"></i></div>
+                <h4>International Training</h4>
+                <p>Our doctors have trained and practiced at leading institutions across India and abroad, bringing a global perspective to every treatment.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-sync-alt"></i></div>
+                <h4>Continuously Updated</h4>
+                <p>We regularly attend international conferences, workshops and certification programs to stay at the forefront of dental innovation.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-comments"></i></div>
+                <h4>Patient Communication</h4>
+                <p>Our doctors take time to explain every step, listen to your concerns and involve you in every decision about your own smile.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-users"></i></div>
+                <h4>Collaborative Approach</h4>
+                <p>Complex cases benefit from multi-specialist collaboration. Our team consults together to give you the most comprehensive care possible.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CREDENTIALS STRIP -->
+<section class="credentials-strip">
+    <div class="credentials-inner">
+        <div class="section-label">Credentials & Certifications</div>
+        <h2 class="section-title">Trained. Certified. Trusted.</h2>
+        <div class="creds-grid">
+            <div class="cred-item">
+                <div class="cred-icon"><i class="fas fa-magic"></i></div>
+                <div>
+                    <div class="cred-title">Certified Invisalign Provider</div>
+                    <div class="cred-desc">Reface is an official Invisalign certified clinic with hundreds of successful clear aligner cases completed.</div>
+                </div>
+            </div>
+            <div class="cred-item">
+                <div class="cred-icon"><i class="fas fa-laptop-medical"></i></div>
+                <div>
+                    <div class="cred-title">Virtual Surgical Planning</div>
+                    <div class="cred-desc">Our surgeons are trained in 3D jaw surgery simulation for precise, predictable orthognathic surgical outcomes.</div>
+                </div>
+            </div>
+            <div class="cred-item">
+                <div class="cred-icon"><i class="fas fa-tooth"></i></div>
+                <div>
+                    <div class="cred-title">Corticobasal Implantology</div>
+                    <div class="cred-desc">Certified in advanced Corticobasal implant techniques for patients who were previously told implants were not possible.</div>
+                </div>
+            </div>
+            <div class="cred-item">
+                <div class="cred-icon"><i class="fas fa-bolt"></i></div>
+                <div>
+                    <div class="cred-title">Laser Dentistry Trained</div>
+                    <div class="cred-desc">Certified in dental laser procedures for painless, minimally invasive gum treatments and cosmetic corrections.</div>
+                </div>
+            </div>
+            <div class="cred-item">
+                <div class="cred-icon"><i class="fas fa-child"></i></div>
+                <div>
+                    <div class="cred-title">Pediatric Specialists</div>
+                    <div class="cred-desc">Dedicated paediatric-trained doctors who make children's dental visits a positive, fear-free experience.</div>
+                </div>
+            </div>
+            <div class="cred-item">
+                <div class="cred-icon"><i class="fas fa-shield-alt"></i></div>
+                <div>
+                    <div class="cred-title">Infection Control Certified</div>
+                    <div class="cred-desc">All our doctors and staff are trained in the highest standards of dental sterilisation and infection control protocols.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="doctors-cta">
+    <div class="section-label" style="justify-content:center;">Let's Get Started</div>
+    <h2>Book with a Specialist Today</h2>
+    <p>Choose your preferred doctor and treatment area — we'll confirm your appointment within 2 hours.</p>
+    <div class="cta-btns">
+        <a href="{% url 'book_appointment' %}" class="btn btn-primary">
+            <i class="fas fa-calendar-plus"></i> Book Appointment
+        </a>
+        <a href="https://wa.me/919999999999" class="btn btn-outline" style="border-color:var(--primary)">
+            <i class="fab fa-whatsapp"></i> WhatsApp Us
+        </a>
+    </div>
+</section>
+
+<a href="https://wa.me/919999999999" class="whatsapp-float"><i class="fab fa-whatsapp"></i></a>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Specialty filter
+document.querySelectorAll('.spec-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.spec-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const filter = this.dataset.filter;
+        document.querySelectorAll('.doctor-card').forEach(card => {
+            if (filter === 'all' || card.dataset.specialty.includes(filter)) {
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.animation = 'fadeUp 0.4s ease forwards';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+<style>
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+{% endblock %}

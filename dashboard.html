@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}My Dashboard | Reface Dental{% endblock %}
+
+{% block extra_css %}
+<style>
+.dashboard-section { padding: 3rem 2rem; background: var(--off-white); min-height: calc(100vh - 72px); }
+.dashboard-inner { max-width: 1100px; margin: 0 auto; }
+.dashboard-header { margin-bottom: 2rem; }
+.dashboard-header h1 { font-family: var(--font-display); font-size: 2rem; color: var(--primary); }
+.dashboard-header p { color: var(--text-medium); }
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
+.stat-card { background: white; border-radius: var(--radius-lg); padding: 1.5rem; border: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; }
+.stat-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+.stat-icon.green { background: #d4edda; color: #155724; }
+.stat-icon.blue { background: #cce5ff; color: #004085; }
+.stat-icon.amber { background: #fff3cd; color: #856404; }
+.stat-number { font-family: var(--font-display); font-size: 1.75rem; font-weight: 600; color: var(--primary); line-height: 1; }
+.stat-label { font-size: 0.8rem; color: var(--text-medium); margin-top: 2px; }
+.section-card { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border); margin-bottom: 1.5rem; overflow: hidden; }
+.section-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.section-card-header h3 { font-size: 1rem; font-weight: 600; color: var(--primary); }
+.apt-table { width: 100%; border-collapse: collapse; }
+.apt-table th { padding: 0.75rem 1rem; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); background: var(--off-white); font-weight: 600; }
+.apt-table td { padding: 1rem; border-top: 1px solid var(--border); font-size: 0.875rem; }
+.apt-table tr:hover td { background: var(--off-white); }
+.status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 0.25rem 0.625rem; border-radius: 100px; font-size: 0.75rem; font-weight: 600; }
+.status-pending { background: #fff3cd; color: #856404; }
+.status-confirmed { background: #cce5ff; color: #004085; }
+.status-completed { background: #d4edda; color: #155724; }
+.status-cancelled { background: #f8d7da; color: #721c24; }
+.empty-state { padding: 3rem; text-align: center; color: var(--text-light); }
+.empty-state i { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
+.empty-state p { font-size: 0.9rem; }
+.cancel-link { color: var(--danger); font-size: 0.8rem; text-decoration: none; font-weight: 500; }
+.cancel-link:hover { text-decoration: underline; }
+@media (max-width: 700px) { .stats-row { grid-template-columns: 1fr; } .apt-table { font-size: 0.8rem; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="dashboard-inner">
+        <div class="dashboard-header">
+            <h1>Hello, {{ user.first_name }} 👋</h1>
+            <p>Welcome to your patient dashboard. Manage your appointments and profile here.</p>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fas fa-calendar-check"></i></div>
+                <div><div class="stat-number">{{ upcoming_appointments.count }}</div><div class="stat-label">Upcoming Appointments</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fas fa-history"></i></div>
+                <div><div class="stat-number">{{ total_appointments }}</div><div class="stat-label">Total Appointments</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon amber"><i class="fas fa-user"></i></div>
+                <div>
+                    <div class="stat-number" style="font-size:1.1rem;margin-top:4px">{{ user.get_full_name }}</div>
+                    <div class="stat-label"><a href="{% url 'patient_profile' %}" style="color:var(--accent);text-decoration:none;font-weight:600">Edit Profile →</a></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming -->
+        <div class="section-card">
+            <div class="section-card-header">
+                <h3><i class="fas fa-calendar-alt" style="color:var(--accent);margin-right:8px"></i>Upcoming Appointments</h3>
+                <a href="{% url 'book_appointment' %}" class="btn btn-primary" style="padding:0.5rem 1rem;font-size:0.8rem">
+                    <i class="fas fa-plus"></i> Book New
+                </a>
+            </div>
+            {% if upcoming_appointments %}
+            <table class="apt-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Doctor</th>
+                        <th>Service</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for apt in upcoming_appointments %}
+                    <tr>
+                        <td><strong>{{ apt.appointment_date|date:"D, M d Y" }}</strong></td>
+                        <td>{{ apt.appointment_time|time:"g:i A" }}</td>
+                        <td>{{ apt.doctor.name|default:"TBD" }}</td>
+                        <td>{{ apt.service.name|default:"General" }}</td>
+                        <td><span class="status-badge status-{{ apt.status }}">{{ apt.get_status_display }}</span></td>
+                        <td>
+                            {% if apt.status in 'pending,confirmed' %}
+                            <a href="{% url 'cancel_appointment' apt.pk %}" class="cancel-link" onclick="return confirm('Cancel this appointment?')">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-calendar-plus"></i>
+                <p>No upcoming appointments. <a href="{% url 'book_appointment' %}" style="color:var(--primary);font-weight:600">Book one now →</a></p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Past -->
+        {% if past_appointments %}
+        <div class="section-card">
+            <div class="section-card-header">
+                <h3><i class="fas fa-history" style="color:var(--text-light);margin-right:8px"></i>Past Appointments</h3>
+            </div>
+            <table class="apt-table">
+                <thead>
+                    <tr><th>Date</th><th>Doctor</th><th>Service</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    {% for apt in past_appointments %}
+                    <tr>
+                        <td>{{ apt.appointment_date|date:"M d, Y" }}</td>
+                        <td>{{ apt.doctor.name|default:"—" }}</td>
+                        <td>{{ apt.service.name|default:"General" }}</td>
+                        <td><span class="status-badge status-{{ apt.status }}">{{ apt.get_status_display }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

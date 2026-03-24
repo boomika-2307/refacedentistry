@@ -1,0 +1,599 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gallery | Before & After Smile Transformations | Reface Chennai{% endblock %}
+{% block meta_desc %}View stunning before and after smile transformation photos from Reface Dentofacial Centre, Kilpauk Chennai — Invisalign, Braces, Implants, Veneers and more.{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* ══ HERO ══ */
+.gallery-hero {
+    background: linear-gradient(135deg, var(--primary) 0%, #0b2a2a 55%, #1a2a1a 100%);
+    padding: 5.5rem 2rem 4.5rem;
+    text-align: center; position: relative; overflow: hidden;
+}
+.gallery-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/svg%3E");
+}
+.gallery-hero-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+.gallery-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    color: white; line-height: 1.08; margin-bottom: 1.25rem;
+}
+.gallery-hero h1 em { color: var(--accent); font-style: italic; }
+.gallery-hero p { color: rgba(255,255,255,0.7); font-size: 1.05rem; line-height: 1.75; max-width: 560px; margin: 0 auto; }
+
+/* ══ FILTER BAR ══ */
+.gallery-filter-bar {
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 1.1rem 2rem;
+    position: sticky; top: 72px; z-index: 100;
+    box-shadow: var(--shadow-sm);
+}
+.gallery-filter-inner {
+    max-width: 1280px; margin: 0 auto;
+    display: flex; align-items: center; gap: 0.625rem; flex-wrap: wrap;
+}
+.filter-label-txt {
+    font-size: 0.75rem; font-weight: 700; color: var(--text-light);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.25rem;
+}
+.gf-btn {
+    padding: 0.4rem 1rem; border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: white; color: var(--text-medium);
+    font-size: 0.8rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    font-family: var(--font-body); display: flex; align-items: center; gap: 6px;
+}
+.gf-btn:hover { border-color: var(--primary); color: var(--primary); }
+.gf-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+.gf-btn .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+
+/* ══ BEFORE/AFTER SECTION ══ */
+.before-after-section { padding: 5rem 2rem; background: var(--off-white); }
+.ba-inner { max-width: 1280px; margin: 0 auto; }
+.ba-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem; margin-top: 3rem;
+}
+
+/* ── Before/After Slider Card ── */
+.ba-card {
+    border-radius: var(--radius-lg); overflow: hidden;
+    background: white; border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm); transition: all 0.35s;
+    cursor: pointer;
+}
+.ba-card:hover { box-shadow: var(--shadow-md); transform: translateY(-6px); }
+.ba-slider-wrap {
+    position: relative; height: 260px; overflow: hidden;
+    user-select: none; touch-action: none;
+}
+.ba-before, .ba-after {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; color: rgba(255,255,255,0.15);
+}
+.ba-before {
+    background: linear-gradient(135deg, #2d3748, #4a5568);
+}
+.ba-after {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    clip-path: inset(0 50% 0 0);
+    transition: clip-path 0.05s linear;
+}
+.ba-before img, .ba-after img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+}
+.ba-divider {
+    position: absolute; top: 0; bottom: 0;
+    left: 50%; transform: translateX(-50%);
+    width: 3px; background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    z-index: 10; pointer-events: none;
+    transition: left 0.05s linear;
+}
+.ba-handle {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: white; box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 11; cursor: ew-resize; pointer-events: none;
+    transition: left 0.05s linear;
+}
+.ba-handle i { color: var(--primary); font-size: 0.875rem; }
+.ba-label-before, .ba-label-after {
+    position: absolute; bottom: 0.875rem;
+    padding: 0.3rem 0.75rem; border-radius: 100px;
+    font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.08em; z-index: 12; pointer-events: none;
+}
+.ba-label-before { left: 0.875rem; background: rgba(0,0,0,0.55); color: white; }
+.ba-label-after  { right: 0.875rem; background: var(--accent); color: var(--primary); }
+.ba-drag-hint {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.5); color: white;
+    padding: 0.4rem 0.875rem; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 600;
+    pointer-events: none; z-index: 13;
+    opacity: 1; transition: opacity 0.4s;
+}
+.ba-card.interacted .ba-drag-hint { opacity: 0; }
+
+.ba-card-info { padding: 1.25rem 1.5rem; }
+.ba-treatment {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); font-weight: 800; margin-bottom: 0.35rem;
+}
+.ba-title { font-weight: 700; color: var(--primary); font-size: 0.95rem; margin-bottom: 0.35rem; }
+.ba-desc { font-size: 0.8rem; color: var(--text-medium); line-height: 1.55; }
+.ba-view-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: 0.875rem; font-size: 0.78rem;
+    font-weight: 700; color: var(--primary);
+    transition: gap 0.2s;
+}
+.ba-card:hover .ba-view-btn { gap: 10px; color: var(--accent); }
+
+/* ══ CLINIC PHOTOS ══ */
+.clinic-photos-section { padding: 5rem 2rem; background: white; }
+.clinic-inner { max-width: 1280px; margin: 0 auto; }
+.clinic-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
+    gap: 1rem; margin-top: 3rem;
+}
+.clinic-item {
+    border-radius: var(--radius-lg); overflow: hidden;
+    background: var(--light-gray); position: relative;
+    cursor: pointer;
+}
+.clinic-item.large {
+    grid-column: span 2; grid-row: span 2;
+}
+.clinic-item-inner {
+    width: 100%; height: 100%; min-height: 200px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; color: var(--border);
+    position: relative; overflow: hidden;
+}
+.clinic-item.large .clinic-item-inner { min-height: 420px; }
+.clinic-item-inner img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.clinic-item:hover .clinic-item-inner img { transform: scale(1.06); }
+.clinic-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(26,74,74,0.8), transparent 50%);
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; align-items: flex-end; padding: 1.25rem;
+}
+.clinic-item:hover .clinic-overlay { opacity: 1; }
+.clinic-overlay-text { color: white; font-size: 0.875rem; font-weight: 600; }
+.clinic-zoom-icon {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--primary); font-size: 1rem;
+    opacity: 0; transition: opacity 0.3s;
+}
+.clinic-item:hover .clinic-zoom-icon { opacity: 1; }
+
+/* ══ LIGHTBOX ══ */
+.lightbox {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.92); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.lightbox.open { opacity: 1; pointer-events: all; }
+.lightbox-inner {
+    position: relative; max-width: 900px; width: 90%;
+    max-height: 85vh;
+}
+.lightbox-img {
+    width: 100%; max-height: 80vh;
+    object-fit: contain; border-radius: var(--radius-lg);
+    display: block;
+}
+.lightbox-placeholder {
+    width: 100%; height: 400px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-radius: var(--radius-lg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem; color: rgba(255,255,255,0.2);
+}
+.lightbox-close {
+    position: absolute; top: -50px; right: 0;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: white; cursor: pointer; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.2); }
+.lightbox-caption {
+    text-align: center; color: rgba(255,255,255,0.7);
+    font-size: 0.875rem; margin-top: 1rem;
+}
+.lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    color: white; cursor: pointer; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+}
+.lightbox-nav:hover { background: rgba(255,255,255,0.25); }
+.lightbox-nav.prev { left: -60px; }
+.lightbox-nav.next { right: -60px; }
+
+/* ══ STATS BANNER ══ */
+.gallery-stats { background: var(--primary); padding: 3.5rem 2rem; }
+.gallery-stats-inner {
+    max-width: 1000px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2rem; text-align: center;
+}
+.gs-item .num {
+    font-family: var(--font-display);
+    font-size: 2.5rem; color: var(--accent); font-weight: 600; line-height: 1;
+}
+.gs-item .lbl { font-size: 0.78rem; color: rgba(255,255,255,0.6); margin-top: 0.3rem; }
+
+/* ══ CTA ══ */
+.gallery-cta {
+    padding: 5.5rem 2rem;
+    background: linear-gradient(135deg, var(--accent), #e8c96d);
+    text-align: center;
+}
+.gallery-cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3.5vw, 3rem);
+    color: var(--primary); margin-bottom: 0.875rem;
+}
+.gallery-cta p { color: rgba(26,74,74,0.72); margin-bottom: 2.25rem; }
+.cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* ══ EMPTY STATE ══ */
+.empty-placeholder {
+    grid-column: 1 / -1; text-align: center;
+    padding: 3rem; color: var(--text-light);
+}
+.empty-placeholder i { font-size: 3rem; display: block; margin-bottom: 0.75rem; color: var(--border); }
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 1024px) {
+    .ba-grid { grid-template-columns: 1fr 1fr; }
+    .clinic-grid { grid-template-columns: repeat(2, 1fr); }
+    .clinic-item.large { grid-column: span 2; grid-row: span 1; }
+    .clinic-item.large .clinic-item-inner { min-height: 260px; }
+    .gallery-stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .lightbox-nav.prev { left: -10px; }
+    .lightbox-nav.next { right: -10px; }
+}
+@media (max-width: 640px) {
+    .ba-grid { grid-template-columns: 1fr; }
+    .clinic-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-stats-inner { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="gallery-hero">
+    <div class="gallery-hero-inner">
+        <div class="section-label" style="justify-content:center; color:var(--accent);">Real Patients, Real Results</div>
+        <h1>Smile <em>Transformations</em><br>That Inspire</h1>
+        <p>Browse before & after photos from our real patients — every smile tells a story of confidence restored.</p>
+    </div>
+</section>
+
+<!-- FILTER BAR -->
+<div class="gallery-filter-bar">
+    <div class="gallery-filter-inner">
+        <span class="filter-label-txt">View:</span>
+        <button class="gf-btn active" data-target="all">
+            <span class="dot" style="background:var(--primary)"></span> All
+        </button>
+        <button class="gf-btn" data-target="before-after-section">
+            <span class="dot" style="background:#2d7a5a"></span> Before & After
+        </button>
+        <button class="gf-btn" data-target="clinic-photos-section">
+            <span class="dot" style="background:var(--accent)"></span> Our Clinic
+        </button>
+    </div>
+</div>
+
+<!-- STATS BANNER -->
+<div class="gallery-stats">
+    <div class="gallery-stats-inner">
+        <div class="gs-item"><div class="num">500+</div><div class="lbl">Smile Transformations</div></div>
+        <div class="gs-item"><div class="num">4.9★</div><div class="lbl">Patient Rating</div></div>
+        <div class="gs-item"><div class="num">15+</div><div class="lbl">Years of Excellence</div></div>
+        <div class="gs-item"><div class="num">20+</div><div class="lbl">Treatments Offered</div></div>
+    </div>
+</div>
+
+<!-- BEFORE & AFTER -->
+<section class="before-after-section" id="before-after-section">
+    <div class="ba-inner">
+        <div class="section-label">Drag to Reveal</div>
+        <h2 class="section-title">Before & After<br>Transformations</h2>
+        <p class="section-subtitle">Drag the slider on each photo to reveal the transformation. Real patients, real results.</p>
+
+        <div class="ba-grid">
+
+            {% for item in before_after %}
+            <div class="ba-card" data-before="{{ item.before_image.url|default:'' }}" data-after="{{ item.after_image.url|default:'' }}">
+                <div class="ba-slider-wrap">
+                    <div class="ba-before">
+                        {% if item.before_image %}
+                            <img src="{{ item.before_image.url }}" alt="Before">
+                        {% else %}
+                            <i class="fas fa-user-circle"></i>
+                        {% endif %}
+                    </div>
+                    <div class="ba-after">
+                        {% if item.after_image %}
+                            <img src="{{ item.after_image.url }}" alt="After">
+                        {% else %}
+                            <i class="fas fa-smile-beam"></i>
+                        {% endif %}
+                    </div>
+                    <div class="ba-divider"></div>
+                    <div class="ba-handle"><i class="fas fa-arrows-alt-h"></i></div>
+                    <div class="ba-label-before">Before</div>
+                    <div class="ba-label-after">After</div>
+                    <div class="ba-drag-hint">← Drag to compare →</div>
+                </div>
+                <div class="ba-card-info">
+                    {% if item.treatment %}
+                    <div class="ba-treatment">{{ item.treatment.name }}</div>
+                    {% endif %}
+                    <div class="ba-title">{{ item.title }}</div>
+                    {% if item.description %}<div class="ba-desc">{{ item.description }}</div>{% endif %}
+                    <div class="ba-view-btn">View full case <i class="fas fa-arrow-right" style="font-size:0.7rem"></i></div>
+                </div>
+            </div>
+            {% empty %}
+
+            <!-- STATIC FALLBACK BEFORE/AFTER -->
+            {% for case in static_cases %}
+            <div class="ba-card">
+                <div class="ba-slider-wrap">
+                    <div class="ba-before">
+                        <i class="fas fa-user-circle" style="position:absolute;font-size:6rem;color:rgba(255,255,255,0.12)"></i>
+                    </div>
+                    <div class="ba-after">
+                        <i class="fas fa-smile-beam" style="position:absolute;font-size:6rem;color:rgba(255,255,255,0.12)"></i>
+                    </div>
+                    <div class="ba-divider"></div>
+                    <div class="ba-handle"><i class="fas fa-arrows-alt-h"></i></div>
+                    <div class="ba-label-before">Before</div>
+                    <div class="ba-label-after">After</div>
+                    <div class="ba-drag-hint">← Drag to compare →</div>
+                </div>
+                <div class="ba-card-info">
+                    <div class="ba-treatment">{{ case.treatment }}</div>
+                    <div class="ba-title">{{ case.title }}</div>
+                    <div class="ba-desc">{{ case.desc }}</div>
+                    <a href="{% url 'book_appointment' %}" class="ba-view-btn" onclick="event.stopPropagation()">
+                        Book this treatment <i class="fas fa-arrow-right" style="font-size:0.7rem"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CLINIC PHOTOS -->
+<section class="clinic-photos-section" id="clinic-photos-section">
+    <div class="clinic-inner">
+        <div class="section-label">Inside Reface</div>
+        <h2 class="section-title">Our Clinic</h2>
+        <p class="section-subtitle">Modern, welcoming and equipped with the latest technology — designed around your comfort.</p>
+
+        <div class="clinic-grid" id="clinicGrid">
+            {% for photo in clinic_photos %}
+            <div class="clinic-item {% if forloop.first %}large{% endif %}"
+                 onclick="openLightbox('{{ photo.image.url|default:'' }}', '{{ photo.title }}')"
+                 data-src="{{ photo.image.url|default:'' }}"
+                 data-title="{{ photo.title }}">
+                <div class="clinic-item-inner">
+                    {% if photo.image %}
+                        <img src="{{ photo.image.url }}" alt="{{ photo.title }}" loading="lazy">
+                    {% else %}
+                        <i class="fas fa-image"></i>
+                    {% endif %}
+                    <div class="clinic-overlay">
+                        <div class="clinic-overlay-text">{{ photo.title }}</div>
+                    </div>
+                    <div class="clinic-zoom-icon"><i class="fas fa-expand-alt"></i></div>
+                </div>
+            </div>
+            {% empty %}
+
+            <!-- STATIC CLINIC PLACEHOLDERS -->
+            {% for room in static_clinic %}
+            <div class="clinic-item {% if forloop.first %}large{% endif %}"
+                 onclick="openLightbox('', '{{ room.title }}')"
+                 data-title="{{ room.title }}">
+                <div class="clinic-item-inner" style="background: linear-gradient(135deg, {{ room.color1 }}, {{ room.color2 }});">
+                    <i class="{{ room.icon }}" style="font-size: {% if forloop.first %}6rem{% else %}4rem{% endif %};"></i>
+                    <div class="clinic-overlay">
+                        <div class="clinic-overlay-text">{{ room.title }}</div>
+                    </div>
+                    <div class="clinic-zoom-icon"><i class="fas fa-expand-alt"></i></div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-inner">
+        <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+        <button class="lightbox-nav prev" onclick="lightboxNav(-1)"><i class="fas fa-chevron-left"></i></button>
+        <button class="lightbox-nav next" onclick="lightboxNav(1)"><i class="fas fa-chevron-right"></i></button>
+        <div id="lightboxContent"></div>
+        <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+</div>
+
+<!-- CTA -->
+<section class="gallery-cta">
+    <div class="section-label" style="justify-content:center;">Your Turn</div>
+    <h2>Ready for Your Transformation?</h2>
+    <p>Join thousands of patients who've already transformed their smiles at Reface.</p>
+    <div class="cta-row">
+        <a href="{% url 'book_appointment' %}" class="btn btn-primary">
+            <i class="fas fa-calendar-plus"></i> Book Free Consultation
+        </a>
+        <a href="{% url 'contact' %}" class="btn btn-outline" style="border-color:var(--primary)">
+            <i class="fas fa-phone"></i> Contact Us
+        </a>
+    </div>
+</section>
+
+<a href="https://wa.me/919999999999" class="whatsapp-float"><i class="fab fa-whatsapp"></i></a>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ══ BEFORE/AFTER SLIDER ══
+document.querySelectorAll('.ba-card').forEach(card => {
+    const wrap    = card.querySelector('.ba-slider-wrap');
+    const after   = card.querySelector('.ba-after');
+    const divider = card.querySelector('.ba-divider');
+    const handle  = card.querySelector('.ba-handle');
+    if (!wrap) return;
+
+    let dragging = false;
+
+    function setPosition(pct) {
+        pct = Math.max(5, Math.min(95, pct));
+        after.style.clipPath   = `inset(0 ${100 - pct}% 0 0)`;
+        divider.style.left     = pct + '%';
+        handle.style.left      = pct + '%';
+        card.classList.add('interacted');
+    }
+
+    function getPct(clientX) {
+        const rect = wrap.getBoundingClientRect();
+        return ((clientX - rect.left) / rect.width) * 100;
+    }
+
+    // Mouse
+    wrap.addEventListener('mousedown', e => { dragging = true; setPosition(getPct(e.clientX)); e.preventDefault(); });
+    window.addEventListener('mousemove', e => { if (dragging) setPosition(getPct(e.clientX)); });
+    window.addEventListener('mouseup',   () => { dragging = false; });
+
+    // Touch
+    wrap.addEventListener('touchstart', e => { dragging = true; setPosition(getPct(e.touches[0].clientX)); }, {passive:true});
+    window.addEventListener('touchmove', e => { if (dragging) setPosition(getPct(e.touches[0].clientX)); }, {passive:true});
+    window.addEventListener('touchend',  () => { dragging = false; });
+
+    // Start at 50%
+    setPosition(50);
+    card.classList.remove('interacted');
+});
+
+// ══ GALLERY FILTER ══
+document.querySelectorAll('.gf-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.gf-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const target = this.dataset.target;
+        if (target === 'all') {
+            document.querySelectorAll('.before-after-section, .clinic-photos-section').forEach(s => s.style.display = 'block');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            document.querySelectorAll('.before-after-section, .clinic-photos-section').forEach(s => s.style.display = 'none');
+            const el = document.getElementById(target);
+            if (el) {
+                el.style.display = 'block';
+                setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+            }
+        }
+    });
+});
+
+// ══ LIGHTBOX ══
+let lbItems = [];
+let lbIndex = 0;
+
+function buildLightboxItems() {
+    lbItems = [];
+    document.querySelectorAll('.clinic-item').forEach(item => {
+        lbItems.push({ src: item.dataset.src || '', title: item.dataset.title || '' });
+    });
+}
+
+function openLightbox(src, title) {
+    buildLightboxItems();
+    lbIndex = lbItems.findIndex(i => i.title === title);
+    if (lbIndex === -1) lbIndex = 0;
+    showLightboxItem(lbIndex);
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function showLightboxItem(idx) {
+    const item = lbItems[idx];
+    const content = document.getElementById('lightboxContent');
+    if (item && item.src) {
+        content.innerHTML = `<img src="${item.src}" class="lightbox-img" alt="${item.title}">`;
+    } else {
+        content.innerHTML = `<div class="lightbox-placeholder"><i class="fas fa-image"></i></div>`;
+    }
+    document.getElementById('lightboxCaption').textContent = item ? item.title : '';
+}
+
+function closeLightbox(e) {
+    if (!e || e.target === document.getElementById('lightbox') || e.currentTarget.classList.contains('lightbox-close')) {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+}
+
+function lightboxNav(dir) {
+    lbIndex = (lbIndex + dir + lbItems.length) % lbItems.length;
+    showLightboxItem(lbIndex);
+    event.stopPropagation();
+}
+
+document.addEventListener('keydown', e => {
+    const lb = document.getElementById('lightbox');
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft')  lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
+});
+</script>
+<style>
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+{% endblock %}

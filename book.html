@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Appointment | Reface Dental{% endblock %}
+
+{% block extra_css %}
+<style>
+.book-section { padding: 4rem 2rem; background: var(--off-white); min-height: calc(100vh - 72px); }
+.book-inner { max-width: 780px; margin: 0 auto; }
+.book-header { text-align: center; margin-bottom: 2.5rem; }
+.book-card { background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; }
+.book-card-header { background: var(--primary); padding: 2rem; color: white; }
+.book-card-header h2 { font-family: var(--font-display); font-size: 1.5rem; }
+.book-card-header p { color: rgba(255,255,255,0.65); font-size: 0.875rem; margin-top: 0.25rem; }
+.book-body { padding: 2.5rem; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.form-group { margin-bottom: 0; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.5rem; }
+.form-group label span { color: var(--danger); }
+.form-control { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-family: var(--font-body); font-size: 0.9rem; color: var(--text-dark); background: white; transition: border-color 0.2s; outline: none; appearance: none; }
+.form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,74,74,0.08); }
+select.form-control { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a8a8a' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+.form-divider { grid-column: 1 / -1; border: none; border-top: 1px solid var(--border); margin: 0.5rem 0; }
+.submit-row { grid-column: 1 / -1; display: flex; gap: 1rem; justify-content: flex-end; padding-top: 0.5rem; }
+.login-prompt { background: #cce5ff; border: 1px solid #b8daff; border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; font-size: 0.875rem; color: #004085; }
+.login-prompt a { color: #004085; font-weight: 700; }
+.time-note { grid-column: 1 / -1; background: var(--off-white); border-radius: var(--radius); padding: 0.875rem 1rem; font-size: 0.8rem; color: var(--text-medium); }
+.time-note i { color: var(--accent); margin-right: 6px; }
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .form-group.full, .submit-row { grid-column: 1; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="book-section">
+    <div class="book-inner">
+        <div class="book-header">
+            <div class="section-label" style="justify-content:center">Schedule a Visit</div>
+            <h1 class="section-title">Book Your Appointment</h1>
+            <p class="section-subtitle" style="margin:0 auto;text-align:center">We'll confirm your appointment within 2 hours. Emergency? Call us directly.</p>
+        </div>
+
+        <div class="book-card">
+            <div class="book-card-header">
+                <h2><i class="fas fa-calendar-plus" style="color:var(--accent);margin-right:10px"></i>Appointment Details</h2>
+                <p>Fill in the details below and our team will confirm shortly.</p>
+            </div>
+            <div class="book-body">
+                {% if not user.is_authenticated %}
+                <div class="login-prompt">
+                    <i class="fas fa-info-circle" style="font-size:1.1rem;flex-shrink:0"></i>
+                    <span><a href="{% url 'patient_login' %}">Login</a> or <a href="{% url 'patient_register' %}">create an account</a> to book and track your appointments. Or continue below — we'll create one for you.</span>
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Select Service <span>*</span></label>
+                            <select name="service" class="form-control" required>
+                                <option value="">-- Choose Service --</option>
+                                {% for service in services %}
+                                <option value="{{ service.id }}">{{ service.name }}</option>
+                                {% endfor %}
+                                <option value="">Invisalign / Clear Aligners</option>
+                                <option value="">Metal Braces</option>
+                                <option value="">Dental Implants</option>
+                                <option value="">Teeth Whitening</option>
+                                <option value="">Gummy Smile Correction</option>
+                                <option value="">General Consultation</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Preferred Doctor</label>
+                            <select name="doctor" class="form-control">
+                                <option value="">-- Any Doctor --</option>
+                                {% for doctor in doctors %}
+                                <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <hr class="form-divider">
+
+                        <div class="form-group">
+                            <label>Preferred Date <span>*</span></label>
+                            <input type="date" name="date" class="form-control" required
+                                   min="{{ today|date:'Y-m-d' }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Preferred Time <span>*</span></label>
+                            <select name="time" class="form-control" required>
+                                <option value="">-- Choose Time --</option>
+                                <option value="09:30">9:30 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="10:30">10:30 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="11:30">11:30 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="14:30">2:30 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="15:30">3:30 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                                <option value="16:30">4:30 PM</option>
+                                <option value="17:00">5:00 PM</option>
+                                <option value="17:30">5:30 PM</option>
+                                <option value="18:00">6:00 PM</option>
+                                <option value="18:30">6:30 PM</option>
+                                <option value="19:00">7:00 PM</option>
+                                <option value="19:30">7:30 PM</option>
+                            </select>
+                        </div>
+
+                        <div class="time-note">
+                            <i class="fas fa-clock"></i>
+                            <strong>Clinic Hours:</strong> Monday – Saturday, 9:30 AM – 8:00 PM. Sunday: Emergency only.
+                        </div>
+
+                        <div class="form-group full">
+                            <label>Special Notes / Concerns</label>
+                            <textarea name="notes" class="form-control" rows="3" placeholder="Any allergies, medical conditions, or specific concerns..."></textarea>
+                        </div>
+
+                        <div class="submit-row">
+                            <a href="{% url 'home' %}" class="btn btn-outline">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calendar-check"></i> Confirm Booking
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Set min date to today
+document.querySelector('input[type="date"]').min = new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}

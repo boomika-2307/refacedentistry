@@ -1,0 +1,231 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content_title %}<h1>Dashboard</h1>{% endblock %}
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+<style>
+#content-related{display:none!important}
+#content-main{width:100%!important;float:none!important;max-width:100%!important}
+#content{padding:16px 20px!important}
+.rdb *{box-sizing:border-box}
+
+.rdb-top{background:linear-gradient(135deg,#1a4a4a,#0b2c2c);border-radius:12px;padding:1.25rem 1.75rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem;margin-bottom:1.1rem}
+.rdb-top h2{font-size:1.25rem;font-weight:700;color:#fff;margin:0 0 .15rem}
+.rdb-top p{color:rgba(255,255,255,.55);font-size:.82rem;margin:0}
+.rdb-clock{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.35);color:#c9a84c;padding:.4rem 1rem;border-radius:100px;font-size:.79rem;font-weight:700;white-space:nowrap}
+
+.rdb-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem;margin-bottom:1.1rem}
+.rdb-sc{background:#fff;border:1px solid #e2e0da;border-radius:10px;padding:1rem 1.1rem;display:flex;align-items:center;gap:.875rem;text-decoration:none;color:inherit;transition:all .18s;position:relative;overflow:hidden;min-width:0}
+.rdb-sc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0}
+.rdb-sc.a::after{background:#c9a84c}.rdb-sc.b::after{background:#c0392b}.rdb-sc.c::after{background:#2d7a5a}.rdb-sc.d::after{background:#1a4a9a}
+.rdb-sc:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.09)}
+.rdb-ico{width:44px;height:44px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.25rem}
+.rdb-ico.a{background:#fff8e6}.rdb-ico.b{background:#fde8e8}.rdb-ico.c{background:#e8f5ee}.rdb-ico.d{background:#e8f0fa}
+.rdb-num{font-size:1.8rem;font-weight:800;color:#1a4a4a;line-height:1}
+.rdb-lbl{font-size:.67rem;color:#999;margin-top:3px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;line-height:1.3}
+.rdb-sub{font-size:.67rem;color:#ccc;margin-top:2px}
+
+.rdb-cols{display:grid;grid-template-columns:1fr 290px;gap:1.1rem;margin-bottom:1.1rem;align-items:start}
+.rdb-card{background:#fff;border:1px solid #e2e0da;border-radius:10px;overflow:hidden}
+.rdb-ch{padding:.75rem 1.1rem;border-bottom:1px solid #f0eeea;background:#fafaf8;display:flex;justify-content:space-between;align-items:center}
+.rdb-ch h3{font-size:.83rem;font-weight:700;color:#1a4a4a;margin:0}
+.rdb-ch a{font-size:.73rem;color:#c9a84c;text-decoration:none;font-weight:700}
+.rdb-ch a:hover{text-decoration:underline}
+
+.rdb-tip{padding:.55rem 1rem;background:#fffbf0;border-bottom:1px solid #f0eeea;font-size:.75rem;color:#856404}
+.rdb-tip a{color:#856404;font-weight:700}
+
+.apt-t{width:100%;border-collapse:collapse;font-size:.79rem}
+.apt-t th{padding:.45rem .9rem;text-align:left;font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;color:#aaa;background:#f8f6f1;font-weight:700;border-bottom:1px solid #eee}
+.apt-t td{padding:.65rem .9rem;border-bottom:1px solid #f5f3ef;vertical-align:middle}
+.apt-t tr:last-child td{border-bottom:none}
+.apt-t tr:hover td{background:#fafaf8}
+.apt-n{font-weight:700;color:#1a4a4a;font-size:.8rem}
+.apt-s{font-size:.69rem;color:#bbb}
+.apt-d{background:#e8f4f4;color:#1a4a4a;padding:2px 7px;border-radius:100px;font-size:.7rem;font-weight:700}
+.lt{background:#fff3cd;color:#856404;padding:1px 5px;border-radius:100px;font-size:.6rem;font-weight:800}
+.lm{background:#d4edda;color:#155724;padding:1px 5px;border-radius:100px;font-size:.6rem;font-weight:800}
+.sp{font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:100px}
+.sp-p{background:#fff3cd;color:#856404}.sp-c{background:#cce5ff;color:#004085}.sp-d{background:#d4edda;color:#155724}.sp-x{background:#f8d7da;color:#721c24}
+.apt-e{font-size:.69rem;font-weight:700;color:#1a4a4a;text-decoration:none;padding:2px 7px;border:1px solid #ddd;border-radius:5px;transition:all .14s}
+.apt-e:hover{background:#1a4a4a;color:#fff;border-color:#1a4a4a}
+
+.qa-w{padding:.5rem;display:flex;flex-direction:column;gap:.3rem}
+.qa-a{display:flex;align-items:center;gap:.55rem;padding:.55rem .75rem;border-radius:7px;font-size:.79rem;font-weight:600;text-decoration:none;color:#1a4a4a;border:1px solid #e8e6e0;background:#fafaf8;transition:all .14s}
+.qa-a:hover{background:#1a4a4a;color:#fff;border-color:#1a4a4a}
+.qa-i{width:24px;height:24px;border-radius:5px;background:#edf4f4;display:flex;align-items:center;justify-content:center;font-size:.78rem;flex-shrink:0;transition:background .14s}
+.qa-a:hover .qa-i{background:rgba(255,255,255,.15)}
+
+.rdb-bot{display:grid;grid-template-columns:repeat(3,1fr);gap:.875rem}
+.mh{padding:.6rem .9rem;background:#fafaf8;border-bottom:1px solid #f0eeea}
+.mh h4{font-size:.77rem;font-weight:700;color:#1a4a4a;margin:0}
+.mr{padding:.48rem .9rem;border-bottom:1px solid #f5f3ef;display:flex;justify-content:space-between;align-items:center}
+.mr:last-child{border-bottom:none}
+.mr a{font-size:.77rem;font-weight:600;color:#333;text-decoration:none}
+.mr a:hover{color:#c9a84c}
+.mr span{color:#ccc;font-size:.7rem}
+
+.rdb-empty{padding:1.75rem;text-align:center;color:#bbb;font-size:.79rem}
+.rdb-empty span{font-size:2rem;display:block;margin-bottom:.4rem}
+</style>
+
+<div class="rdb">
+
+<!-- Welcome -->
+<div class="rdb-top">
+  <div>
+    <h2>🦷 Reface Dental — Admin Panel</h2>
+    <p>Kilpauk, Chennai &nbsp;·&nbsp; Welcome, {{ user.first_name|default:user.username }}!</p>
+  </div>
+  <div class="rdb-clock" id="rdClock">--</div>
+</div>
+
+<!-- Stats -->
+<div class="rdb-stats">
+  <a href="/admin/appointments/appointment/?period=today" class="rdb-sc a">
+    <div class="rdb-ico a">📅</div>
+    <div><div class="rdb-num" id="s1">—</div><div class="rdb-lbl">Today's Appointments</div><div class="rdb-sub">Scheduled today</div></div>
+  </a>
+  <a href="/admin/appointments/appointment/?status=pending" class="rdb-sc b">
+    <div class="rdb-ico b">🟡</div>
+    <div><div class="rdb-num" id="s2">—</div><div class="rdb-lbl">Pending Confirmation</div><div class="rdb-sub">Needs attention</div></div>
+  </a>
+  <a href="/admin/auth/user/" class="rdb-sc c">
+    <div class="rdb-ico c">👥</div>
+    <div><div class="rdb-num" id="s3">—</div><div class="rdb-lbl">Registered Patients</div><div class="rdb-sub">Total accounts</div></div>
+  </a>
+  <a href="/admin/core/contactmessage/?is_read__exact=0" class="rdb-sc d">
+    <div class="rdb-ico d">✉️</div>
+    <div><div class="rdb-num" id="s4">—</div><div class="rdb-lbl">Unread Messages</div><div class="rdb-sub">Contact form</div></div>
+  </a>
+</div>
+
+<!-- Two columns -->
+<div class="rdb-cols">
+
+  <!-- Upcoming appointments -->
+  <div class="rdb-card">
+    <div class="rdb-ch">
+      <h3>📆 Upcoming Appointments</h3>
+      <a href="/admin/appointments/appointment/?period=upcoming">View all →</a>
+    </div>
+    <div class="rdb-tip">💡 Select rows to bulk-confirm or export CSV. Use <a href="/admin/appointments/appointment/?period=today">Today's filter</a> for today's list.</div>
+    <div id="aptPanel"><div class="rdb-empty"><span>📅</span>Loading…</div></div>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="rdb-card">
+    <div class="rdb-ch"><h3>⚡ Quick Actions</h3></div>
+    <div class="qa-w">
+      <a href="/admin/appointments/appointment/add/"             class="qa-a"><div class="qa-i">📅</div>Add New Appointment</a>
+      <a href="/admin/appointments/appointment/?period=today"    class="qa-a"><div class="qa-i">🗓</div>Today's Schedule</a>
+      <a href="/admin/appointments/appointment/?period=upcoming" class="qa-a"><div class="qa-i">⏳</div>All Upcoming</a>
+      <a href="/admin/appointments/appointment/?status=pending"  class="qa-a"><div class="qa-i">🟡</div>Pending Confirmations</a>
+      <a href="/admin/core/doctor/add/"                          class="qa-a"><div class="qa-i">👨‍⚕️</div>Add New Doctor</a>
+      <a href="/admin/core/service/add/"                         class="qa-a"><div class="qa-i">🦷</div>Add New Service</a>
+      <a href="/admin/core/galleryitem/add/"                     class="qa-a"><div class="qa-i">🖼</div>Upload Gallery Photo</a>
+      <a href="/admin/core/testimonial/add/"                     class="qa-a"><div class="qa-i">⭐</div>Add Testimonial</a>
+      <a href="/admin/blog/blogpost/add/"                        class="qa-a"><div class="qa-i">📝</div>Write Blog Post</a>
+      <a href="/admin/core/contactmessage/"                      class="qa-a"><div class="qa-i">✉️</div>View Messages</a>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom 3-col -->
+<div class="rdb-bot">
+  <div class="rdb-card">
+    <div class="mh"><h4>🔗 Appointment Filters</h4></div>
+    <div class="mr"><a href="/admin/appointments/appointment/?period=today">Today's Appointments</a><span>→</span></div>
+    <div class="mr"><a href="/admin/appointments/appointment/?period=tomorrow">Tomorrow</a><span>→</span></div>
+    <div class="mr"><a href="/admin/appointments/appointment/?period=this_week">This Week</a><span>→</span></div>
+    <div class="mr"><a href="/admin/appointments/appointment/?period=this_month">This Month</a><span>→</span></div>
+    <div class="mr"><a href="/admin/appointments/appointment/?status=pending">Pending</a><span>→</span></div>
+    <div class="mr"><a href="/admin/appointments/appointment/?status=confirmed">Confirmed</a><span>→</span></div>
+    <div class="mr"><a href="/admin/appointments/appointment/?status=completed">Completed</a><span>→</span></div>
+    <div class="mr"><a href="/admin/appointments/timeslot/">Manage Time Slots</a><span>→</span></div>
+  </div>
+  <div class="rdb-card">
+    <div class="mh"><h4>🏥 Clinic Content</h4></div>
+    <div class="mr"><a href="/admin/core/service/">All Services</a><span>→</span></div>
+    <div class="mr"><a href="/admin/core/doctor/">Doctors</a><span>→</span></div>
+    <div class="mr"><a href="/admin/core/galleryitem/">Gallery</a><span>→</span></div>
+    <div class="mr"><a href="/admin/core/testimonial/">Testimonials</a><span>→</span></div>
+    <div class="mr"><a href="/admin/blog/blogpost/">Blog Posts</a><span>→</span></div>
+    <div class="mr"><a href="/admin/blog/blogcategory/">Blog Categories</a><span>→</span></div>
+    <div class="mr"><a href="/admin/core/contactmessage/">Contact Messages</a><span>→</span></div>
+  </div>
+  <div class="rdb-card">
+    <div class="mh"><h4>👥 Patient Management</h4></div>
+    <div class="mr"><a href="/admin/auth/user/">All Patients</a><span>→</span></div>
+    <div class="mr"><a href="/admin/patients/patientprofile/">Patient Profiles</a><span>→</span></div>
+    <div class="mr"><a href="/admin/auth/user/add/">Add New Patient</a><span>→</span></div>
+    <div class="mr"><a href="/admin/appointments/appointment/?period=upcoming">Upcoming Bookings</a><span>→</span></div>
+    <div class="mr"><a href="/admin/appointments/appointment/?period=past">Past Appointments</a><span>→</span></div>
+  </div>
+</div>
+
+</div><!-- /rdb -->
+
+<script>
+(function tick(){
+  var n=new Date(),D=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var h=n.getHours(),m=n.getMinutes(),ap=h>=12?'PM':'AM';h=h%12||12;
+  document.getElementById('rdClock').textContent=D[n.getDay()]+', '+n.getDate()+' '+M[n.getMonth()]+' · '+h+':'+(m<10?'0':'')+m+' '+ap;
+  setTimeout(tick,1000);
+})();
+
+async function cnt(u){
+  try{var r=await fetch(u),t=await r.text(),m=t.match(/(\d[\d,]*)\s+result/i);return m?m[1].replace(/,/g,''):'0';}catch(e){return'—';}
+}
+Promise.all([
+  cnt('/admin/appointments/appointment/?period=today'),
+  cnt('/admin/appointments/appointment/?status=pending'),
+  cnt('/admin/auth/user/'),
+  cnt('/admin/core/contactmessage/?is_read__exact=0'),
+]).then(function(v){
+  document.getElementById('s1').textContent=v[0];
+  document.getElementById('s2').textContent=v[1];
+  document.getElementById('s3').textContent=v[2];
+  document.getElementById('s4').textContent=v[3];
+});
+
+(async function(){
+  var panel=document.getElementById('aptPanel');
+  try{
+    var r=await fetch('/admin/appointments/appointment/?period=upcoming');
+    var t=await r.text();
+    var doc=new DOMParser().parseFromString(t,'text/html');
+    var rows=[].slice.call(doc.querySelectorAll('#result_list tbody tr'),0,8);
+    if(!rows.length){
+      panel.innerHTML='<div class="rdb-empty"><span>🎉</span>No upcoming appointments. <a href="/admin/appointments/appointment/add/" style="color:#1a4a4a;font-weight:700">Add one →</a></div>';
+      return;
+    }
+    var today=new Date();today.setHours(0,0,0,0);
+    var tom=new Date(today);tom.setDate(today.getDate()+1);
+    var html='<table class="apt-t"><thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody>';
+    rows.forEach(function(row){
+      var cells=row.querySelectorAll('td');
+      var href=(row.querySelector('a')||{getAttribute:function(){return'#';}}).getAttribute('href')||'#';
+      var g=function(i){return(cells[i]&&cells[i].innerText||'').trim()||'—';};
+      var patient=g(0),phone=g(1),doctor=g(2),date=g(4),status=g(5).toLowerCase();
+      var dl=date;
+      var dm=date.match(/(\w+ \d+,?\s*\d+)/);
+      if(dm){var d=new Date(dm[0]);d.setHours(0,0,0,0);
+        if(d.getTime()===today.getTime()) dl+=' <span class="lt">TODAY</span>';
+        else if(d.getTime()===tom.getTime()) dl+=' <span class="lm">TMRW</span>';
+      }
+      var sc=status.indexOf('pending')>-1?'sp-p':status.indexOf('confirmed')>-1?'sp-c':status.indexOf('completed')>-1?'sp-d':'sp-x';
+      var sl=status.charAt(0).toUpperCase()+status.slice(1)||'—';
+      var id=(href.match(/\/(\d+)\//)|| [])[1]||'';
+      html+='<tr><td><div class="apt-n">'+patient+'</div><div class="apt-s">'+phone+'</div></td><td><span class="apt-d">'+doctor+'</span></td><td>'+dl+'</td><td><span class="sp '+sc+'">'+sl+'</span></td><td><a href="/admin/appointments/appointment/'+id+'/change/" class="apt-e">Edit</a></td></tr>';
+    });
+    html+='</tbody></table>';
+    panel.innerHTML=html;
+  }catch(e){
+    panel.innerHTML='<div class="rdb-empty"><span>📅</span><a href="/admin/appointments/appointment/?period=upcoming" style="color:#1a4a4a;font-weight:700">View all upcoming →</a></div>';
+  }
+})();
+</script>
+{% endblock %}

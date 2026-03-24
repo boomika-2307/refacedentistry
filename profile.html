@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}My Profile | Reface Dental{% endblock %}
+{% block extra_css %}
+<style>
+.profile-section { padding: 3rem 2rem; background: var(--off-white); min-height: calc(100vh - 72px); }
+.profile-inner { max-width: 800px; margin: 0 auto; }
+.profile-header { display: flex; align-items: center; gap: 1.5rem; background: white; border-radius: var(--radius-lg); padding: 2rem; border: 1px solid var(--border); margin-bottom: 2rem; }
+.profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: var(--accent); font-family: var(--font-display); font-size: 2rem; overflow: hidden; flex-shrink: 0; }
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-name { font-family: var(--font-display); font-size: 1.5rem; color: var(--primary); }
+.profile-email { font-size: 0.875rem; color: var(--text-medium); }
+.form-card { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 2rem; }
+.form-card h3 { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.form-group { margin-bottom: 0; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.5rem; }
+.form-control { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-family: var(--font-body); font-size: 0.9rem; color: var(--text-dark); outline: none; transition: border-color 0.2s; }
+.form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,74,74,0.08); }
+.actions { grid-column: 1 / -1; display: flex; gap: 1rem; justify-content: flex-end; margin-top: 0.5rem; }
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .form-group.full, .actions { grid-column: 1; } }
+</style>
+{% endblock %}
+{% block content %}
+<section class="profile-section">
+    <div class="profile-inner">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {% if profile.photo %}<img src="{{ profile.photo.url }}" alt="">{% else %}{{ user.first_name|first }}{% endif %}
+            </div>
+            <div>
+                <div class="profile-name">{{ user.get_full_name }}</div>
+                <div class="profile-email">{{ user.email }}</div>
+                <div style="margin-top:0.5rem"><a href="{% url 'patient_dashboard' %}" class="btn btn-outline" style="padding:0.4rem 0.875rem;font-size:0.8rem"><i class="fas fa-arrow-left"></i> Dashboard</a></div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h3>Edit Profile Information</h3>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" class="form-control" value="{{ profile.phone }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" name="date_of_birth" class="form-control" value="{{ profile.date_of_birth|date:'Y-m-d' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select name="gender" class="form-control">
+                            <option value="">-- Select --</option>
+                            <option value="M" {% if profile.gender == 'M' %}selected{% endif %}>Male</option>
+                            <option value="F" {% if profile.gender == 'F' %}selected{% endif %}>Female</option>
+                            <option value="O" {% if profile.gender == 'O' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Profile Photo</label>
+                        <input type="file" name="photo" class="form-control" accept="image/*">
+                    </div>
+                    <div class="form-group full">
+                        <label>Address</label>
+                        <textarea name="address" class="form-control" rows="2">{{ profile.address }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Emergency Contact Name</label>
+                        <input type="text" name="emergency_contact" class="form-control" value="{{ profile.emergency_contact }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Emergency Contact Phone</label>
+                        <input type="tel" name="emergency_phone" class="form-control" value="{{ profile.emergency_phone }}">
+                    </div>
+                    <div class="form-group full">
+                        <label>Medical History / Allergies</label>
+                        <textarea name="medical_history" class="form-control" rows="3" placeholder="Any known allergies, medications, or medical conditions...">{{ profile.medical_history }}</textarea>
+                    </div>
+                    <div class="actions">
+                        <a href="{% url 'patient_dashboard' %}" class="btn btn-outline">Cancel</a>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
